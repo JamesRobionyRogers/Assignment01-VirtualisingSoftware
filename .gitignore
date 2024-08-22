@@ -1,3 +1,6 @@
+# Frontend
+frontend/build
+
 # Backend 
 __pycache__ 
 *.log
