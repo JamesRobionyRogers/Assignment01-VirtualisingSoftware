@@ -1,3 +1,11 @@
+# Backend 
+__pycache__ 
+*.log
+*.out
 
+# Supabase repository 
+supabase/*
+# !supabase/docker
 
+# Misc
 *.pdf
