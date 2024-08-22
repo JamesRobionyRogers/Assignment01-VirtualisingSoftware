@@ -1,8 +1,11 @@
 # Description: This file is used to define the services that will be used in the application.
 # Building; docker-compose build
 # Running: docker-compose up -d
+# Stopping: docker-compose down
 
+name: jobtracker
 version: '3'
+
 services:
   frontend:
     build: ./frontend
@@ -15,5 +18,3 @@ services:
     build: ./backend
     ports:
       - "5001:5001"
-    environment:
-      - DATABASE_URL=postgres://postgres:admin@database:5432/jobtracker
