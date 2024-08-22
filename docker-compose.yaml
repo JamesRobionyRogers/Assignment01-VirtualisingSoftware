@@ -1,0 +1,10 @@
+# Description: This file is used to define the services that will be used in the application.
+# Building; docker-compose build
+# Running: docker-compose up -d
+
+version: '3'
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
