@@ -1,6 +1,7 @@
 # Description: Dockerfile for the backend application
 # Building: docker build --no-cache --tag "job-tracker-backend" .
 # Running: docker run -d -p 5001:5001 --name backend job-tracker-backend
+# Stopping: docker stop backend
 
 FROM python:3.9-slim
 

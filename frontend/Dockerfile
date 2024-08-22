@@ -1,6 +1,7 @@
 # Description: Dockerfile for the frontend application
 # Building: docker build --no-cache --tag "job-tracker-frontend" . 
 # Running: docker run -d -p 80:80 --name frontend job-tracker-frontend
+# Stopping: docker stop frontend
 
 # Building the frontend 
 FROM node:latest AS build
