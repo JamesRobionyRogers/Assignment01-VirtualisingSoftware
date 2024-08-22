@@ -34,7 +34,7 @@ The Job Application Tracker allows users to record and monitor the companies and
 
 1. Build and run the supabase database 
 ```bash
-cd backend 
+cd database 
 docker compose up -d
 ```
 
@@ -43,7 +43,7 @@ docker compose up -d
 docker compose up -d
 ```
 
-3. Access the job tracker application at [`http://localhost:80`](http://localhost:5000)
+3. Access the job tracker application at [`http://localhost:80`](http://localhost:80)
    - Supabase studio dashboard: [`http://localhost:8000`](http://localhost:8000)
    - Python Flask API: [`http://localhost:5001`](http://localhost:5001)
 
@@ -56,7 +56,7 @@ docker compose down
 
 2. Shut down the supabase database 
 ```bash
-cd backend
+cd database
 docker compose down
 ```
 
