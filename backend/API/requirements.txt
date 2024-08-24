@@ -1,0 +1,6 @@
+flask
+supabase
+flask_cors
+python-dotenv
+flask_restx
+routes
