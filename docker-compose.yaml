@@ -15,6 +15,6 @@ services:
       - backend
 
   backend:
-    build: ./backend
+    build: ./backend/ap
     ports:
       - "5001:5001"
