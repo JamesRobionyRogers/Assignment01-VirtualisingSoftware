@@ -31,10 +31,11 @@ export interface ApplicationData {
     img: string,
     company: string,
     job: string,
-    org: string,
+    description?: string,
     status: ApplicationStatus,
-    date: Date,
+    date: string,
     link: string,
+    notes?: string,
     documents?: ApplicationDocuments[],
 }
 
