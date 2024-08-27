@@ -32,7 +32,7 @@ export interface ApplicationData {
     company: string,
     job: string,
     description?: string,
-    status: ApplicationStatus,
+    status: string, // ApplicationStatus,
     date: string,
     link: string,
     notes?: string,

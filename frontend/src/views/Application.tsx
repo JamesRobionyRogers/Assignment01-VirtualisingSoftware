@@ -5,7 +5,7 @@ import { BellIcon, PlusIcon, CheckIcon, ChevronDownIcon, ClockIcon, DocumentText
 import { NoSymbolIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Avatar, Breadcrumbs, Chip, Timeline, TimelineBody, TimelineConnector, TimelineHeader, TimelineIcon, TimelineItem } from '@material-tailwind/react';
 
-import { ApplicationAction, ApplicationData, StatusMap, suppressMissingAttributes } from '../types';
+import { ApplicationAction, ApplicationData, ApplicationStatus, StatusMap, suppressMissingAttributes } from '../types';
 import PathConstants from '../pathConstants';
 
 const STATUS_MAP: StatusMap = {
@@ -172,7 +172,7 @@ export default function Application({ application }: { application: ApplicationD
                         variant="ghost"
                         size="sm"
                         value={applicationData.status}
-                        color={STATUS_MAP[applicationData.status]}
+                        color={STATUS_MAP[applicationData.status as ApplicationStatus]}
                         className="mt-auto"
                     />
 
