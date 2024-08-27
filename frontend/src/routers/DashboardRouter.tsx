@@ -7,7 +7,7 @@ import PathConstants from '../pathConstants';
 import Sidebar from '../components/dashboard/Sidebar';
 import DashboardNav from '../components/dashboard/DashboardNav';
 
-export default function NewDashboardRouter() {
+export default function DashboardRouter() {
     const navigation = [
         { name: 'Dashboard', route: PathConstants.DASHBOARD, current: true, icon: <PresentationChartBarIcon className="h-5 w-5" /> },
         { name: 'Generate Cover Letter', route: PathConstants.GENERATE, current: false, icon: <CubeTransparentIcon className="h-5 w-5" /> },
