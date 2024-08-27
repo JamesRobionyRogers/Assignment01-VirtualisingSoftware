@@ -100,6 +100,7 @@ export default function Application() {
                 <Link to={PathConstants.DASHBOARD} className="opacity-60"> Application Tracker </Link>
             </Breadcrumbs>
 
+            {/* Heading */}
             <div className="m-5 mt-0">
                 <div className="lg:flex lg:items-center lg:justify-between">
                     <div className="flex flex-row gap-5 min-w-0 flex-1">
@@ -111,7 +112,7 @@ export default function Application() {
                                 value={applicationData.job} 
                                 placeholder="Job Title"
                                 onChange={handleChange} 
-                                className="-m-2 p-2 text-3xl font-bold leading-7 text-gray-900 border-transparent focus:border-transparent" 
+                                className="-m-2 p-2 text-2xl font-bold leading-7 text-gray-900 border-transparent focus:border-transparent md:text-3xl" 
                             />
                         </h2>
                     </div>
@@ -199,11 +200,10 @@ export default function Application() {
             
             <hr className="my-2 border-blue-gray-50" />
 
-            <div className="pt-4 px-2 grid grid-cols-10 h-auto gap-5">
-                {/* Left Pane */}
-
-                <div className="flex flex-col gap-10 col-span-6">
-                    <section>
+            <div className="py-4 px-2 grid grid-cols-4 gap-y-10 md:grid-cols-10 md:gap-x-5">
+                
+                    {/* Job description & Timeline */}
+                    <section className="col-span-6 row-span-2 sm:order-1 md:order-none">
                         <h3 className="text-lg font-bold text-gray-900">Job Description</h3>
                         <hr className="my-2 border-blue-gray-50" />
                         <Field className=" ">
@@ -219,14 +219,14 @@ export default function Application() {
 
                         <div className="ml-3">
                             <span className="w-[28px] grid justify-center"><span className="h-4 border-l-2"></span></span>
-                            <Timeline className="text-gray-500">
+                            <Timeline className="text-gray-500 text-sm md:text-[16px]">
                                 <TimelineItem>
                                     <TimelineConnector/>
                                     <TimelineHeader>
                                         <TimelineIcon className="bg-gray-500">
                                             <ClockIcon className="size-4" />
                                         </TimelineIcon>
-                                        <div className="flex flex-row gap-1">
+                                        <div className="flex flex-row items-center gap-1 ">
                                             <span className="font-medium">Started tracking application</span>
                                             <p>on the 25th April 2018</p>
                                         </div>
@@ -240,7 +240,7 @@ export default function Application() {
                                         <TimelineIcon className="bg-gray-500">
                                             <BellIcon className="h-4 w-4" />
                                         </TimelineIcon>
-                                        <div className="flex flex-row gap-1">
+                                        <div className="flex flex-row items-center gap-1 ">
                                             <span className="font-medium">Status changed</span>
                                             <p>to</p>
                                             <span className="inline-flex items-center rounded-md bg-yellow-50 mx-1 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">Interview</span>
@@ -253,22 +253,42 @@ export default function Application() {
                         </div>
                     </section>
 
-                    <section>
+                    {/* Cover Letter */}
+                    <section className="relative col-span-4 row-span-6 flex flex-col sm:order-4 sm:row-span-4 md:order-none">
+                        <h3 className="text-lg font-bold text-gray-900">Cover Letter</h3>
+                        <div className="flex-grow mt-2 flex justify-center items-center rounded-lg border border-dashed border-gray-900/25 px-6">
+                            <div className="text-center">
+                                <DocumentTextIcon aria-hidden="true" className="mx-auto h-12 w-12 text-gray-300" />
+                                <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                                    <label
+                                        htmlFor="file-upload"
+                                        className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                                    >
+                                        <span>Generate</span>
+                                        <input id="file-upload" name="file-upload" type="file" className="sr-only" />
+                                    </label>
+                                    <p className="pl-1">a cover letter here</p>
+                                </div>
+                                <p className="text-xs leading-5 text-gray-600">TXT or PDF. Up to 3 options</p>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    {/* Additional Notes  */}
+                    <section className="col-span-6 row-span-2 sm:order-2 md:order-none">
                         <h3 className="text-lg font-bold text-gray-900">Additional Notes</h3>
                         <hr className="my-2 border-blue-gray-50" />
                         <Field className=" ">
-                            {/* <Label className="py-2 px-3 w-full block text-md border-b border-sky-400 bg-blue-400/25">
-                                Add notes to this application
-                            </Label> */}
                             <Textarea
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                placeholder="No job description provided"
+                                placeholder="Oops... No notes here. &#13;&#10;&#13;&#10;Keep track of things such as the hiring manager's name, the interview date, or any other important details here."
                                 rows={5}
                             />
                         </Field>
                     </section>
 
-                    <section className="-mt-4">
+                    {/* Documents */}
+                    <section className="col-span-6 row-span-3 sm:order-3 md:order-none">
                         <div className="mb-2 flex flex-row justify-between">
                             <h3 className="text-lg font-bold text-gray-900">Documents</h3>
                             <button onClick={handleUploadDocument} className=" inline-flex gap-2 items-center rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
@@ -310,29 +330,30 @@ export default function Application() {
                         
                     </section>
 
-                </div>
-                
-                {/* Cover Letter */}
-                <div className="col-span-4 flex flex-col gap-5">
-                    <section>
-                        <h3 className="text-lg font-bold text-gray-900">Cover Letter</h3>
-                        <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                            <div className="py-28 text-center">
-                                <DocumentTextIcon aria-hidden="true" className="mx-auto h-12 w-12 text-gray-300" />
-                                <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                                    <label
-                                        htmlFor="file-upload"
-                                        className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                                    >
-                                        <span>Generate</span>
-                                        <input id="file-upload" name="file-upload" type="file" className="sr-only" />
-                                    </label>
-                                    <p className="pl-1">a cover letter here</p>
-                                </div>
-                                <p className="text-xs leading-5 text-gray-600">TXT or PDF. Up to 3 options</p>
-                            </div>
-                        </div>
+                    {/* Actions section */}
+                    <section className="mt-1 col-span-4 row-span-2 sm:order-last md:order-none">
+                        <h3 className="text-lg font-bold text-gray-900">Actions</h3>
+                        <hr className="my-2 border-blue-gray-50" />
+                        <ul className="flex flex-col gap-3">
+                            { 
+                                ACTIONS.map((action, index) => (
+                                    <li key={index} className={`text-sm font-semibold text-${action.color}-500`}>
+                                        <button type="button" onClick={action.action} className="flex flex-row gap-2">
+                                            <action.icon aria-hidden="true" className="h-5 w-5" />
+                                            {action.name}
+                                        </button>
+
+                                    </li>
+                                ))
+                            }
+                        </ul>
                     </section>
+
+                    
+                
+                {/* Right column */}
+                <div className="col-span-4 flex flex-col gap-5">
+                    
 
                     {/* <section>
                         <h3 className="text-lg font-bold text-gray-900">Documents</h3>
@@ -354,23 +375,6 @@ export default function Application() {
                         </div>
                     </section> */}
                     
-                    <section className="mt-1">
-                        <h3 className="text-lg font-bold text-gray-900">Actions</h3>
-                        <hr className="my-2 border-blue-gray-50" />
-                        <ul className="flex flex-col gap-2">
-                            { 
-                                ACTIONS.map((action, index) => (
-                                    <li key={index} className={`text-sm font-semibold text-${action.color}-500`}>
-                                        <button type="button" onClick={action.action} className="flex flex-row gap-2">
-                                            <action.icon aria-hidden="true" className="h-5 w-5" />
-                                            {action.name}
-                                        </button>
-
-                                    </li>
-                                ))
-                            }
-                        </ul>
-                    </section>
                 </div>
             </div>
         </div>
