@@ -13,7 +13,6 @@ import { LandingPage, LoginPage, SignupPage, ErrorPage } from './pages';
 import NotFound from "./components/common/NotFound";
 
 import ApplicationTracker from './views/ApplicationTracker';
-import Application from './views/Application';
 import Profile from './views/Profile';
 
 import { applicationLoader } from './loaders';

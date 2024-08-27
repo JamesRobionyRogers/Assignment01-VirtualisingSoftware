@@ -7,7 +7,6 @@ import { Avatar, Breadcrumbs, Chip, Timeline, TimelineBody, TimelineConnector, T
 
 import { ApplicationAction, ApplicationData, StatusMap, suppressMissingAttributes } from '../types';
 import PathConstants from '../pathConstants';
-import Datepicker from '../components/common/Datepicker';
 
 const STATUS_MAP: StatusMap = {
     Applied: "blue",
