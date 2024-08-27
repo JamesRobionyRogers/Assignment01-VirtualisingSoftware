@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, json, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider } from "@material-tailwind/react";
 
@@ -16,18 +16,9 @@ import ApplicationTracker from './views/ApplicationTracker';
 import Application from './views/Application';
 import Profile from './views/Profile';
 
-import { fetchApplicationData } from './api';
+import { applicationLoader } from './loaders';
 
 import './index.css';
-
-async function applicationLoader({ params }) {
-  const { uuid } = params;
-  const data = await fetchApplicationData(uuid);
-  if (!data) {
-    throw new Response('Not Found', { status: 404 });
-  }
-  return json(data);
-}
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -59,12 +50,12 @@ const router = createBrowserRouter([
         element: <ApplicationTracker />,
       },
       { 
-        path: "/dashboard/application", 
-        element: <Application />,
+        path: "/dashboard/applications/new", 
+        element: <ApplicationTracker />,
       },
       { 
-        path: "/dashboard/application/:uuid", 
-        element: <Application />,
+        path: "/dashboard/applications/:uuid", 
+        element: <ApplicationTracker />,
         loader: applicationLoader,
       },
 

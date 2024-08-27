@@ -7,6 +7,7 @@ import { Avatar, Breadcrumbs, Chip, Timeline, TimelineBody, TimelineConnector, T
 
 import { ApplicationAction, ApplicationData, StatusMap, suppressMissingAttributes } from '../types';
 import PathConstants from '../pathConstants';
+import Datepicker from '../components/common/Datepicker';
 
 const STATUS_MAP: StatusMap = {
     Applied: "blue",
@@ -21,7 +22,8 @@ const ACTIONS: ApplicationAction[] = [
     { name: 'Delete this application', color: 'red', icon: TrashIcon, action: () => {} },
 ];
 
-function formatDate(date: Date): string {
+function formatDate(dateString: string): string {
+    const date = new Date(dateString);
     const days = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const day = date.getDate();
     const month = days[date.getMonth()];
@@ -43,21 +45,29 @@ function formatDate(date: Date): string {
     return `${day}${suffix} ${month} ${year}`;
 }
 
-export default function Application() {
-    const [applicationData, setApplicationData] = useState<ApplicationData>({
-        uuid: "",
-        img: "https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png",
-        job: "Graduate Software Engineer",
-        company: "Google",
-        org: "",
-        status: "Applied",
-        date: new Date("2018/04/23"),
-        link: "https://www.google.com",
-        documents: [
-            { name: "resume_back_end_developer.pdf", size: "2.4mb", link: "#" },
-            { name: "coverletter_back_end_developer.pdf", size: "4.5mb", link: "#" },
-        ],
-    });
+export default function Application({ application }: { application: ApplicationData}) {
+
+    const [applicationData, setApplicationData] = useState<ApplicationData>(application);
+
+    // Force a re-render of the component when the application data changes
+    useEffect(() => {
+        setApplicationData(application);
+    }, [application]);
+
+    // const [applicationData, setApplicationData] = useState<ApplicationData>({
+    //     uuid: "",
+    //     img: "https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png",
+    //     job: "Graduate Software Engineer",
+    //     company: "Google",
+    //     org: "",
+    //     status: "Applied",
+    //     date: new Date("2018/04/23"),
+    //     link: "https://www.google.com",
+    //     documents: [
+    //         { name: "resume_back_end_developer.pdf", size: "2.4mb", link: "#" },
+    //         { name: "coverletter_back_end_developer.pdf", size: "4.5mb", link: "#" },
+    //     ],
+    // });
 
     const handleUploadDocument = () => {
         alert("Uploading document...");
@@ -104,15 +114,14 @@ export default function Application() {
             <div className="m-5 mt-0">
                 <div className="lg:flex lg:items-center lg:justify-between">
                     <div className="flex flex-row gap-5 min-w-0 flex-1">
-                        <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+                        <h2 className="w-full text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
                             <input 
-                                id="invisible-input"
                                 name="job"
                                 type="text" 
                                 value={applicationData.job} 
                                 placeholder="Job Title"
                                 onChange={handleChange} 
-                                className="-m-2 p-2 text-2xl font-bold leading-7 text-gray-900 border-transparent focus:border-transparent md:text-3xl" 
+                                className="-m-2 p-2 w-full flex-grow text-2xl font-bold leading-7 text-gray-900 border-transparent focus:border-transparent md:text-3xl" 
                             />
                         </h2>
                     </div>
@@ -207,11 +216,9 @@ export default function Application() {
                         <h3 className="text-lg font-bold text-gray-900">Job Description</h3>
                         <hr className="my-2 border-blue-gray-50" />
                         <Field className=" ">
-                            {/* <Label className="py-2 px-3 w-full block text-md border-b border-sky-400 bg-blue-400/25">
-                                Add notes to this application
-                            </Label> */}
                             <Textarea
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                value={applicationData.description}
                                 placeholder="No job description provided"
                                 rows={3}
                             />
