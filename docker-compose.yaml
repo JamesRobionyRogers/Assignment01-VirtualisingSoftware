@@ -4,7 +4,6 @@
 # Stopping: docker-compose down
 
 name: jobtracker
-version: '3'
 
 services:
   frontend:
@@ -15,6 +14,6 @@ services:
       - backend
 
   backend:
-    build: ./backend
+    build: ./backend/api
     ports:
       - "5001:5001"
