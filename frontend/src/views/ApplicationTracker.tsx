@@ -5,10 +5,11 @@ import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 
 import { Card, CardHeader, Input, Typography, Button, CardBody, Chip, CardFooter, Tabs, TabsHeader, Tab, Avatar, IconButton, Tooltip, Drawer, } from "@material-tailwind/react";
 
-import { suppressMissingAttributes } from "../types";
+import { ApplicationData, suppressMissingAttributes } from "../types";
 
 import { color as ChipColor } from "@material-tailwind/react/types/components/chip";
 import Application from "./Application";
+import { useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
 
 const TABS = [
     { label: "All", value: "all" },
@@ -22,6 +23,7 @@ const TABLE_HEAD = ["Company", "Role", "Status", "Date", "Actions"];
 
 const TABLE_ROWS = [
     {
+        uuid: "1",
         img: "https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png",
         name: "Google",
         job: "Graduate Software Engineer",
@@ -66,9 +68,31 @@ const STATUS_MAP: { [key: string]: ChipColor } = {
     Offer: "green",
 };
 
+const defaultApplicationData = {
+    uuid: "",
+    img: "",
+    company: "",
+    job: "",
+    description: "",
+    status: "Applied",
+    date: "",
+    link: "",
+};
 
 export default function ApplicationTrackerView() {
 
+    const loaderData = useLoaderData();
+    console.log("Loader Data: ", loaderData);
+  
+    // Set applicationData to a default value if it is not provided
+    const applicationData = (loaderData) ? loaderData as ApplicationData : defaultApplicationData; 
+    console.log("Application Data: ", applicationData);
+
+    const { uuid } = useParams<{ uuid: string }>();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isNewApplication = location.pathname.includes("/new");
+    
     
     let isFetching = false;
     const getJobApplications = () => {
@@ -89,23 +113,22 @@ export default function ApplicationTrackerView() {
 
     const [page, setPage] = useState(1);
 
-    const [openDrawer, setOpenDrawer] = useState(false)
-    const openDrawerTop = () => setOpenDrawer(true)
-    const closeDrawerTop = () => setOpenDrawer(false)
+    const handleAddApplication = () => navigate('/dashboard/applications/new');
+    const handleCloseDrawer = () => navigate('/dashboard');
 
     return (
         <>
 
             <Drawer
                 placement="right"
-                open={openDrawer}
-                onClose={closeDrawerTop}
+                open={!!uuid || isNewApplication}
+                onClose={handleCloseDrawer}
                 overlay={false}
                 size={1200}
                 className="p-4 border border-blue-gray-100 dark:border-gray-700 rounded-xl overflow-scroll"
                 {...suppressMissingAttributes}
             >
-                <Application />
+                <Application application={applicationData} />
             </Drawer>
 
             <div className="flex flex-col h-full">
@@ -121,7 +144,7 @@ export default function ApplicationTrackerView() {
                                 </Typography>
                             </div>
                             <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-                                <Button onClick={openDrawerTop} className="flex items-center gap-3 dark:bg-white dark:text-black" size="sm" {...suppressMissingAttributes}>
+                                <Button onClick={handleAddApplication} className="flex items-center gap-3 dark:bg-white dark:text-black" size="sm" {...suppressMissingAttributes}>
                                     <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Job Application
                                 </Button>
                             </div>
@@ -177,12 +200,12 @@ export default function ApplicationTrackerView() {
                                         (filter === "all" || status.toLowerCase() === filter) &&
                                         (name.toLowerCase().includes(searchTerm) || job.toLowerCase().includes(searchTerm))
                                 ).map(
-                                    ({ img, name, job, org, status, date, link }, index) => {
+                                    ({ uuid, img, name, job, org, status, date, link }, index) => {
                                         const isLast = index === TABLE_ROWS.length - 1;
                                         const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
                                         return (
-                                            <tr key={index}>
+                                            <tr key={index} onClick={() => navigate(`/dashboard/applications/${uuid}`)} className="hover:cursor-pointer">
                                                 <td className={classes}>
                                                     <div className="flex items-center gap-3">
                                                         <Avatar src={img} alt={name} size="sm" {...suppressMissingAttributes} />
