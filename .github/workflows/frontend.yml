@@ -38,6 +38,6 @@ jobs:
         working-directory: ./frontend
 
       # Runs tests using Vitest via the npm test script
-      # - name: Run tests
-      #   run: npm run test
-      #   working-directory: ./frontend
+      - name: Run tests
+        run: npm run test
+        working-directory: ./frontend
