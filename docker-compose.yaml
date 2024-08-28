@@ -5,6 +5,10 @@
 
 name: jobtracker
 
+include: 
+  - path: 
+    - ./database/docker-compose.yml
+
 services:
   frontend:
     build: ./frontend
