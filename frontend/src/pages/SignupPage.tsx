@@ -35,7 +35,7 @@ export default function SignupPage() {
 			// Handle successful registration
 			alert("Registration successful!");
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			// Handle registration error
 			alert("Registration failed: " + error.message);
 		},
