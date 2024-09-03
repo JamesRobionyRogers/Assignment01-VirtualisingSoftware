@@ -51,9 +51,11 @@ class UserList(Resource):
         data = request.json
         try:
             response = create_user(data)
-            user_id = str(response).split("user=User(id='")[1].split("'")[0]
+            user_id = response.user.id
+            email = response.user.email
             account = data.get('account_info', {})
             account['id'] = user_id
+            account['email'] = email
             create_account(account)
             return {'message': 'User created successfully', 'id': user_id}, 201
         except Exception as e:
@@ -69,14 +71,11 @@ class User(Resource):
     def get(self, user_id, token_user_id):
         """Fetch a user by ID"""
         try:
-            print("user id: " + user_id)
-            print("token user id: " + token_user_id)
             if user_id != token_user_id:
                 return {'error': 'No you\'re not allowed this with that auth key'}, 403
-            response = get_user(user_id)
-            user = response.data
+            user = get_user(user_id).data
             if user:
-                return jsonify(user[0])
+                return jsonify(user)
             else:
                 return {'message': 'User not found'}, 404
         except Exception as e:
@@ -123,9 +122,8 @@ class UserLogin(Resource):
 
         try:
             response = login_user(email, password)
-            session = response.session
-            access_token = response.session.access_token
-            refresh_token = response.session.refresh_token
-            return {'message': 'Login successful', 'access_token': access_token, 'refresh_token': refresh_token}, 200
+            access_token = response[0]
+            user_id = response[1]
+            return {'message': 'Login successful', 'user_id': user_id, 'basic_auth_token': access_token}, 200
         except Exception as e:
             return {'error': str(e)}, 401

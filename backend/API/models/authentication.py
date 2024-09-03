@@ -1,7 +1,8 @@
 from functools import wraps
 from flask import request  # Change this import based on your web framework
 from config import Config
-import requests
+from models.users import login_user
+import base64
 
 def token_required(f):
     @wraps(f)
@@ -17,31 +18,34 @@ def token_required(f):
 
         try:
             result = validate_token(token)
+            print(result)
             if not result['valid']:
                 return {'message': 'Invalid authentication token'}, 401
         except Exception as e:
             return {'message': str(e)}, 401
         
         # Call the original function with the arguments
-        return f(*args, token_user_id = result['user']['id'], **kwargs)
+        return f(*args, token_user_id = result['id'], **kwargs)
     
     return decorated
 
 def validate_token(access_token):
-    url = f"{Config.SUPABASE_URL}/auth/v1/user"
-    headers = {
-        'Authorization': f'Bearer {access_token}',
-        'Content-Type': 'application/json',
-        'apikey': Config.SUPABASE_KEY
-    }
+    # Check if the header starts with "Basic "
+    if not access_token.startswith("Basic "):
+        raise ValueError("Invalid Authorization header")
 
+    # Extract the encoded credentials from the header
+    encoded_credentials = access_token[len("Basic "):]
+
+    # Decode the Base64 encoded credentials
+    decoded_credentials = base64.b64decode(encoded_credentials).decode('utf-8')
+
+    # Split the credentials into email and password
+    email, password = decoded_credentials.split(":", 1)
+    
     try:
-        response = requests.get(url, headers=headers)
-        
-        if response.status_code == 200:
-            return {'valid': True, 'user': response.json()}
-        else:
-            # Handle cases where the response might not have a JSON body
-            return {'valid': False, 'message': response.json().get('message', 'Invalid token')}
-    except requests.RequestException as e:
-        return {'valid': False, 'message': str(e)}
+        id = login_user(email, password)[1]
+        return {'valid': True, 'id': id}
+    except Exception as e:
+        return {'valid': False, 'error': e}
+    
