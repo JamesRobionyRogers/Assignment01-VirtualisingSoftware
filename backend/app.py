@@ -28,14 +28,12 @@ def register_user():
         return jsonify({"error": "Email and password are required"}), 400
 
     try:
-        # Register the user using Supabase
-        print("Registering user")
+
         response = supabase.auth.sign_up({
             "email": email,
             "password": password
         })
 
-        # Check if the registration was successful
         if response.user:
             return jsonify({
                 "message": "User registered successfully",

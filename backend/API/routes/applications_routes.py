@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from flask import jsonify
+from flask import request, jsonify
 from models.applications import create_application, get_application, update_application, delete_application, get_applications_by_user
 from models.authentication import token_required
 

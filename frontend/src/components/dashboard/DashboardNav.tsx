@@ -41,7 +41,7 @@ export default function DashboardNav() {
                     </Typography> */}
 
                     <h6 className="block antialiased tracking-normal font-sans text-base font-semibold text-blue-gray-900 pb-1 leading-none text-left dark:text-white">
-                        Hey, Jane
+                        Hey, {sessionStorage.getItem("first_name")}
                     </h6>
                     <p className="block antialiased font-sans font-light text-gray-700 mt-1 text-sm leading-none dark:text-white">
                         {formatDate()}

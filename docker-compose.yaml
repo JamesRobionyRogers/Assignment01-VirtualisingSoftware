@@ -21,3 +21,14 @@ services:
     build: ./backend/api
     ports:
       - "5001:5001"
+
+  db-init:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./db-init/init-tables.sql:/init-tables.sql
+      - ./db-init/init.sh:/init.sh
+    command: ["/init.sh"]
+    depends_on:
+      - db

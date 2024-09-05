@@ -7,28 +7,38 @@ import PathConstants from "../pathConstants";
 import { Logo } from "../components/icons";
 
 interface RegisterFormData {
-	firstName: string;
-	lastName: string;
-	email: string;
-	password: string;
-	confirmPassword: string;
-	terms: boolean;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    terms: boolean;
+    account_info: {
+        first_name: string;
+        last_name: string;
+        bio: string;
+        phone: string;
+    };
 }
 
 const registerUser = async (data: RegisterFormData) => {
-	const response = await axios.post("http://localhost:5001/register", data);
+	const response = await axios.post("http://localhost:5001/users", data);
 	return response.data;
 };
 
 export default function SignupPage() {
 	const [formData, setFormData] = useState<RegisterFormData>({
-		firstName: "",
-		lastName: "",
-		email: "",
-		password: "",
-		confirmPassword: "",
-		terms: false,
-	});
+        email: "",
+        password: "",
+        confirmPassword: "",
+        terms: false,
+        account_info: {
+            first_name: "",
+            last_name: "",
+            bio: "",
+            phone: "",
+        },
+    });
+
+	
 
 	const mutation = useMutation(registerUser, {
 		onSuccess: () => {
@@ -43,10 +53,23 @@ export default function SignupPage() {
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value, type, checked } = e.target;
-		setFormData({
-			...formData,
-			[name]: type === "checkbox" ? checked : value,
-		});
+	
+		if (name in formData) {
+			// Handle top-level fields
+			setFormData(prevState => ({
+				...prevState,
+				[name]: type === "checkbox" ? checked : value
+			}));
+		} else if (name in formData.account_info) {
+			// Handle nested fields
+			setFormData(prevState => ({
+				...prevState,
+				account_info: {
+					...prevState.account_info,
+					[name]: value
+				}
+			}));
+		}
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
@@ -82,16 +105,16 @@ export default function SignupPage() {
 							<div className="flex flex-row gap-4">
 								<div>
 									<label
-										htmlFor="firstName"
+										htmlFor="first_name"
 										className="mb-4 text-sm font-medium text-gray-900 dark:text-white"
 									>
 										First Name
 									</label>
 									<input
-										type="firstName"
-										name="firstName"
-										id="firstName"
-										value={formData.firstName}
+										type="first_name"
+										name="first_name"
+										id="first_name"
+										value={formData.account_info.first_name}
 										onChange={handleChange}
 										className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 										placeholder="name@company.com"
@@ -100,16 +123,16 @@ export default function SignupPage() {
 								</div>
 								<div>
 									<label
-										htmlFor="lastName"
+										htmlFor="last_name"
 										className="mb-4 text-sm font-medium text-gray-900 dark:text-white"
 									>
 										Last name
 									</label>
 									<input
-										type="lastName"
-										name="lastName"
-										id="lastName"
-										value={formData.lastName}
+										type="last_name"
+										name="last_name"
+										id="last_name"
+										value={formData.account_info.last_name}
 										onChange={handleChange}
 										className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 										placeholder="name@company.com"

@@ -99,6 +99,43 @@ export default function Application({ application }: { application: ApplicationD
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    // Function to handle saving the application data
+    const handleSave = async () => {
+        const now = new Date(); // Get current date and time
+        const formattedDate = now.toISOString();
+
+        const postData = {
+            user_id: sessionStorage.getItem("user_id"),
+            application_url: applicationData.link,
+            job_title: applicationData.job,
+            company_name: applicationData.company,
+            application_date: formattedDate,
+            status: applicationData.status,
+            notes: applicationData.notes,
+            description: applicationData.description,
+        };
+
+        try {
+            const response = await fetch('http://localhost:5001/applications', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Basic ${sessionStorage.getItem('basic_auth_token')}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(postData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+            console.log('Success:', result);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
     return (
         <div className="relative h-full">
             <Breadcrumbs 
@@ -140,6 +177,7 @@ export default function Application({ application }: { application: ApplicationD
                         <span className="sm:ml-3">
                             <button
                                 type="button"
+                                onClick={handleSave}
                                 className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
                                 <CheckIcon aria-hidden="true" className="-ml-0.5 mr-1.5 h-5 w-5" />
@@ -287,6 +325,7 @@ export default function Application({ application }: { application: ApplicationD
                         <Field className=" ">
                             <Textarea
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                value = {applicationData.notes}
                                 placeholder="Oops... No notes here. &#13;&#10;&#13;&#10;Keep track of things such as the hiring manager's name, the interview date, or any other important details here."
                                 rows={5}
                             />

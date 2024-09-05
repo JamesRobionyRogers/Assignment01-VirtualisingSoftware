@@ -10,5 +10,6 @@ export default async function fetchApplicationData(uuid: string): Promise<Applic
         status: "Applied",
         date: "2024/08/27",
         link: "https://www.google.com/about/careers/applications/jobs/results/99640647849255622-software-engineering-director-cloud-observability?q=Engineering#!t=jo&jid=127025001&",
+        notes: "these are the notes"
     }
 }

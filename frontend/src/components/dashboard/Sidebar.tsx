@@ -42,10 +42,10 @@ export default function DefaultSidebar({ title, navigation, userNavigation }: Si
                     }
                     <div className="flex flex-col justify-start">
                         <Typography variant="h6" color="blue-gray" className="pb-1 leading-none text-left dark:text-white" {...suppressMissingAttributes}>
-                            Jane Doe
+                            {sessionStorage.getItem("first_name")} {sessionStorage.getItem("last_name")}
                         </Typography>
                         <Typography color="gray" className="m-0 leading-none dark:text-white" {...suppressMissingAttributes}>
-                            jane.doe@example.com
+                            {sessionStorage.getItem("email")}
                         </Typography>
 
                     </div>
