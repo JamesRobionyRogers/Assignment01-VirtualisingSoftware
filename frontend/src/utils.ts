@@ -54,7 +54,7 @@ export function parseDateString(dateString: string): Date {
     }
 
     // Create and return the Date object
-    return new Date(year, month, parseInt(day, 10));
+    return new Date(parseInt(year, 10), month, parseInt(day, 10));
 }
 
 // Example usage

@@ -57,7 +57,7 @@ export async function handleAddApplication({ request }: { request: Request }): P
 
         return { success: "Application added successfully!" };
     }
-    catch (error) {
+    catch (error: any) {
         console.error(error.response.data.error);
         return { error: "Failed to add application." };
     }
