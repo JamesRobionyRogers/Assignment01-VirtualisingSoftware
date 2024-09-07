@@ -7,6 +7,7 @@ const PathConstants = {
     SIGNUP: '/signup',
     
     DASHBOARD: '/dashboard',
+    NEW_APPLICATION: '/dashboard/application/new',
     APPLICATION: '/dashboard/application/:uuid',
     GENERATE: '/dashboard/generate',
     ARCHIVE: '/dashboard/archive',
