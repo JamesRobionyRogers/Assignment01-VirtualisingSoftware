@@ -82,20 +82,20 @@ BEGIN
        AND NOT EXISTS (SELECT 1 FROM job_applications) THEN
 
         -- Insert the first user into auth.users if no user exists with the given ID
-        INSERT INTO auth.users (id, email, email_confirmed_at, created_at, updated_at, endcrypted_password)
+        INSERT INTO auth.users (id, email, email_confirmed_at, created_at, updated_at, encrypted_password)
         VALUES 
             ('450e5a17-33f1-448a-9532-cbc66e5e7653'::uuid, 
             'john.doe@example.com', 
             CURRENT_TIMESTAMP,
             CURRENT_TIMESTAMP, 
-            CURRENT_TIMESTAMP),
-            '$2a$10$ph5bpEar/roAYI6SfSogy.VtUHVMbJ.uYjZh6QmRJkDLNh8BzKDJG',
+            CURRENT_TIMESTAMP,
+            '$2a$10$ph5bpEar/roAYI6SfSogy.VtUHVMbJ.uYjZh6QmRJkDLNh8BzKDJG'),
             ('560e5a17-44f2-448a-9532-cdc66e6e7654'::uuid, 
             'jane.smith@example.com', 
             CURRENT_TIMESTAMP,
             CURRENT_TIMESTAMP, 
-            CURRENT_TIMESTAMP);
-            '$2a$10$ph5bpEar/roAYI6SfSogy.VtUHVMbJ.uYjZh6QmRJkDLNh8BzKDJG',
+            CURRENT_TIMESTAMP,
+            '$2a$10$ph5bpEar/roAYI6SfSogy.VtUHVMbJ.uYjZh6QmRJkDLNh8BzKDJG');
 
         -- Insert the first user into accounts if no account exists with the given ID
         INSERT INTO accounts (id, first_name, last_name, bio, profile_picture_url, phone, email)
@@ -152,4 +152,3 @@ BEGIN
             ('560e5a17-44f2-448a-9532-cdc66e6e7654', 'https://example.com/job4', 'Content Director', 'MediaHouse', '2024-07-20', 'Offer Extended', 'Direct content creation and strategy', 'Reviewing offer details');
     END IF;
 END $$;
-
