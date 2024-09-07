@@ -89,22 +89,11 @@ export default function ApplicationTrackerView() {
     const navigate = useNavigate();
     const location = useLocation();
     const isNewApplication = location.pathname.includes("/new");
-    
-    
-    let isFetching = false;
-    const getJobApplications = () => {
-        // TODO: Query the API to get the job applications for the user
-        console.log("Get Job Applications");
-    };
 
     const [filter, setFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
     const handleSearch = (e: { target: { value: string; }; }) => setSearchTerm(e.target.value.toLowerCase());
-
-    useEffect(() => {
-        if (!isFetching) getJobApplications();
-        isFetching = true;
-    }, []);
+    
 
     const pageCount = 10; // Math.ceil(TABLE_ROWS.length / 10);
 
@@ -194,20 +183,34 @@ export default function ApplicationTrackerView() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {TABLE_ROWS.filter(
-                                    ({ name, job, status }) =>
-                                        (filter === "all" || status.toLowerCase() === filter) &&
-                                        (name.toLowerCase().includes(searchTerm) || job.toLowerCase().includes(searchTerm))
-                                ).map(
-                                    ({ uuid, img, name, job, org, status, date, link }, index) => {
-                                        const isLast = index === TABLE_ROWS.length - 1;
-                                        const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
+                                {
+                                    applicationData.filter(
+                                        ({ name, job, status }) =>
+                                            (filter === "all" || status.toLowerCase() === filter) &&
+                                            (name.toLowerCase().includes(searchTerm) || job.toLowerCase().includes(searchTerm))
+                                    ).map(
+                                        ({ uuid, img, name, job, org, status, date, link }, index) => {
+                                            const isLast = index === applicationData.length - 1;
+                                            const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
-                                        return (
-                                            <tr key={index} onClick={() => navigate(`/dashboard/applications/${uuid}`)} className="hover:cursor-pointer">
-                                                <td className={classes}>
-                                                    <div className="flex items-center gap-3">
-                                                        <Avatar src={img} alt={name} size="sm" {...suppressMissingAttributes} />
+                                            return (
+                                                <tr key={index} onClick={() => navigate(`/dashboard/applications/${uuid}`)} className="hover:cursor-pointer">
+                                                    <td className={classes}>
+                                                        <div className="flex items-center gap-3">
+                                                            <Avatar src={img} alt={name} size="sm" {...suppressMissingAttributes} />
+                                                            <div className="flex flex-col">
+                                                                <Typography
+                                                                    variant="small"
+                                                                    color="blue-gray"
+                                                                    className="font-normal dark:text-white"
+                                                                    {...suppressMissingAttributes}
+                                                                >
+                                                                    {name}
+                                                                </Typography>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className={classes}>
                                                         <div className="flex flex-col">
                                                             <Typography
                                                                 variant="small"
@@ -215,74 +218,62 @@ export default function ApplicationTrackerView() {
                                                                 className="font-normal dark:text-white"
                                                                 {...suppressMissingAttributes}
                                                             >
-                                                                {name}
+                                                                {job}
+                                                            </Typography>
+                                                            <Typography
+                                                                variant="small"
+                                                                color="blue-gray"
+                                                                className="font-normal opacity-70 dark:text-white"
+                                                                {...suppressMissingAttributes}
+                                                            >
+                                                                {org}
                                                             </Typography>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td className={classes}>
-                                                    <div className="flex flex-col">
+                                                    </td>
+                                                    <td className={classes}>
+                                                        <div className="w-max">
+                                                            <Chip
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                value={status}
+                                                                color={STATUS_MAP[status]}
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                    <td className={classes}>
                                                         <Typography
                                                             variant="small"
                                                             color="blue-gray"
                                                             className="font-normal dark:text-white"
                                                             {...suppressMissingAttributes}
                                                         >
-                                                            {job}
+                                                            {date}
                                                         </Typography>
-                                                        <Typography
-                                                            variant="small"
-                                                            color="blue-gray"
-                                                            className="font-normal opacity-70 dark:text-white"
-                                                            {...suppressMissingAttributes}
-                                                        >
-                                                            {org}
-                                                        </Typography>
-                                                    </div>
-                                                </td>
-                                                <td className={classes}>
-                                                    <div className="w-max">
-                                                        <Chip
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            value={status}
-                                                            color={STATUS_MAP[status]}
-                                                        />
-                                                    </div>
-                                                </td>
-                                                <td className={classes}>
-                                                    <Typography
-                                                        variant="small"
-                                                        color="blue-gray"
-                                                        className="font-normal dark:text-white"
-                                                        {...suppressMissingAttributes}
-                                                    >
-                                                        {date}
-                                                    </Typography>
-                                                </td>
-                                                <td className={`${classes} flex gap-2 justify-center`}>
-                                                    <Tooltip content="Cover Letter">
-                                                        <IconButton variant="text" {...suppressMissingAttributes}>
-                                                            <DocumentTextIcon className="h-4 w-4 text-blue-400" />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                    <a href={link} target="_blank" rel="noopener noreferrer">
-                                                        <Tooltip content="Application Link">
+                                                    </td>
+                                                    <td className={`${classes} flex gap-2 justify-center`}>
+                                                        <Tooltip content="Cover Letter">
                                                             <IconButton variant="text" {...suppressMissingAttributes}>
-                                                                <LinkIcon className="h-4 w-4 dark:text-white" />
+                                                                <DocumentTextIcon className="h-4 w-4 text-blue-400" />
                                                             </IconButton>
                                                         </Tooltip>
-                                                    </a>
-                                                    <Tooltip content="Edit Application">
-                                                        <IconButton variant="text" {...suppressMissingAttributes}>
-                                                            <PencilIcon className="h-4 w-4 dark:text-white" />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                </td>
-                                            </tr>
-                                        );
-                                    }
-                                )}
+                                                        <a href={link} target="_blank" rel="noopener noreferrer">
+                                                            <Tooltip content="Application Link">
+                                                                <IconButton variant="text" {...suppressMissingAttributes}>
+                                                                    <LinkIcon className="h-4 w-4 dark:text-white" />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </a>
+                                                        <Tooltip content="Edit Application">
+                                                            <IconButton variant="text" {...suppressMissingAttributes}>
+                                                                <PencilIcon className="h-4 w-4 dark:text-white" />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        }
+                                    )
+                                }
                             </tbody>
                         </table>
                     </CardBody>
