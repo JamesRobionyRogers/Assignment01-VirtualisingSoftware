@@ -27,14 +27,14 @@ export interface ApplicationDocuments {
 }
 
 export interface ApplicationData {
-    uuid: string,
+    id: string,
     img: string,
-    company: string,
-    job: string,
+    company_name: string,
+    job_title: string,
     description?: string,
     status: string, // ApplicationStatus,
-    date: string,
-    link: string,
+    application_date: string,
+    application_url: string,
     notes?: string,
     documents?: ApplicationDocuments[],
 }
@@ -54,3 +54,5 @@ export interface AxiosError {
         },
     },
 }
+
+export interface ActionDataProps { error: string, success: string }
