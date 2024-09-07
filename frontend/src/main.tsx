@@ -15,6 +15,7 @@ import NotFound from "./components/common/NotFound";
 import ApplicationTracker from './views/ApplicationTracker';
 import Profile from './views/Profile';
 
+import { handleAddApplication } from './actions';    // TODO: Could be added to actions.ts
 import { applicationLoader } from './loaders';
 
 import './index.css';
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
       { 
         path: "/dashboard/applications/new", 
         element: <ApplicationTracker />,
+        action: handleAddApplication,
       },
       { 
         path: "/dashboard/applications/:uuid", 
