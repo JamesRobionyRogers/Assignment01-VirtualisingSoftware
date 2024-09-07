@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-
+import { useActionData, useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Card, CardHeader, Input, Typography, Button, CardBody, Chip, CardFooter, Tabs, TabsHeader, Tab, Avatar, IconButton, Tooltip, Drawer, } from "@material-tailwind/react";
 import { MagnifyingGlassIcon, ChevronUpDownIcon, LinkIcon, DocumentTextIcon, } from "@heroicons/react/24/outline";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 
-import { Card, CardHeader, Input, Typography, Button, CardBody, Chip, CardFooter, Tabs, TabsHeader, Tab, Avatar, IconButton, Tooltip, Drawer, } from "@material-tailwind/react";
-
-import { ApplicationData, suppressMissingAttributes } from "../types";
+import Application from "./Application";
 
 import { color as ChipColor } from "@material-tailwind/react/types/components/chip";
-import Application from "./Application";
-import { useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
+import { ApplicationData, suppressMissingAttributes } from "../types";
+
 
 const TABS = [
     { label: "All", value: "all" },
@@ -82,11 +81,9 @@ const defaultApplicationData = {
 export default function ApplicationTrackerView() {
 
     const loaderData = useLoaderData();
-    console.log("Loader Data: ", loaderData);
   
     // Set applicationData to a default value if it is not provided
     const applicationData = (loaderData) ? loaderData as ApplicationData : defaultApplicationData; 
-    console.log("Application Data: ", applicationData);
 
     const { uuid } = useParams<{ uuid: string }>();
     const navigate = useNavigate();
@@ -116,6 +113,8 @@ export default function ApplicationTrackerView() {
     const handleAddApplication = () => navigate('/dashboard/applications/new');
     const handleCloseDrawer = () => navigate('/dashboard');
 
+    const actionData: { error: string, success: string } = useActionData() as { error: string, success: string }; // Access data returned from action
+
     return (
         <>
 
@@ -128,7 +127,7 @@ export default function ApplicationTrackerView() {
                 className="p-4 border border-blue-gray-100 dark:border-gray-700 rounded-xl overflow-scroll"
                 {...suppressMissingAttributes}
             >
-                <Application application={applicationData} />
+                <Application application={applicationData} actionData={actionData}/>
             </Drawer>
 
             <div className="flex flex-col h-full">
