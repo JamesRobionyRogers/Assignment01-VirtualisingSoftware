@@ -16,7 +16,7 @@ import ApplicationTracker from './views/ApplicationTracker';
 import Profile from './views/Profile';
 
 import { handleAddApplication } from './actions';    // TODO: Could be added to actions.ts
-import { applicationLoader } from './loaders';
+import { allApplicationLoader, applicationLoader } from './loaders';
 
 import './index.css';
 
@@ -48,6 +48,7 @@ const router = createBrowserRouter([
       {
         path: PathConstants.DASHBOARD,
         element: <ApplicationTracker />,
+        loader: allApplicationLoader,
       },
       { 
         path: "/dashboard/applications/new", 
