@@ -12,7 +12,6 @@ import DashboardRouter from "./routers/DashboardRouter";
 import { LandingPage, LoginPage, SignupPage, ErrorPage } from './pages';
 import NotFound from "./components/common/NotFound";
 
-import ApplicationTracker from './views/ApplicationTracker';
 import Profile from './views/Profile';
 
 import { handleAddApplication, handleUpdateApplication } from './actions';    // TODO: Could be added to actions.ts
@@ -20,7 +19,6 @@ import { allApplicationLoader, applicationLoader } from './loaders';
 
 import './index.css';
 import ApplicationsLayout from './routers/ApplicationsLayout';
-import ApplicationTrackerView from './views/ApplicationTracker';
 import ApplicationDetails from './views/ApplicationDetails';
 
 const queryClient = new QueryClient();

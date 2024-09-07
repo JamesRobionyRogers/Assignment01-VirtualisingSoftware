@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {useLoaderData, useNavigate } from "react-router-dom";
-import { Card, CardHeader, Input, Typography, Button, CardBody, Chip, CardFooter, Tabs, TabsHeader, Tab, Avatar, IconButton, Tooltip, Drawer, } from "@material-tailwind/react";
+import { Card, CardHeader, Input, Typography, Button, CardBody, Chip, CardFooter, Tabs, TabsHeader, Tab, Avatar, IconButton, Tooltip } from "@material-tailwind/react";
 import { MagnifyingGlassIcon, ChevronUpDownIcon, LinkIcon, DocumentTextIcon, ArrowPathIcon, } from "@heroicons/react/24/outline";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 
@@ -20,62 +20,11 @@ const TABS = [
 
 const TABLE_HEAD = ["Company", "Role", "Status", "Date", "Actions"];
 
-const TABLE_ROWS = [
-    {
-        uuid: "1",
-        img: "https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png",
-        name: "Google",
-        job: "Graduate Software Engineer",
-        org: "",
-        status: "Applied",
-        date: "23/04/18",
-        link: "https://www.google.com",
-    },
-    {
-        img: "https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_Green.png",
-        name: "Spotify",
-        job: "Fullstack Engineer",
-        org: "",
-        status: "Interview",
-        date: "23/04/18",
-        link: "https://www.google.com",
-    },
-    {
-        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Facebook_Logo_2023.png/768px-Facebook_Logo_2023.png",
-        name: "Facebook",
-        job: "Graduate QA Engineer",
-        org: "",
-        status: "Rejected",
-        date: "23/04/18",
-        link: "https://www.google.com",
-    },
-    {
-        img: "https://freelogopng.com/images/all_img/1659761207uber-app-logo-png.png",
-        name: "Uber",
-        job: "Principal Software Engineer",
-        org: "",
-        status: "Offer",
-        date: "23/04/18",
-        link: "https://www.google.com",
-    },
-];
-
 const STATUS_MAP: { [key: string]: ChipColor } = {
     Applied: "blue",
     Interview: "yellow",
     Rejected: "red",
     Offer: "green",
-};
-
-const defaultApplicationData = {
-    uuid: "",
-    img: "",
-    company: "",
-    job: "",
-    description: "",
-    status: "Applied",
-    date: "",
-    link: "",
 };
 
 export default function ApplicationTracker() {
