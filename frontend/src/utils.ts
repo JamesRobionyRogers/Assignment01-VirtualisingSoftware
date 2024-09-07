@@ -57,9 +57,4 @@ export function parseDateString(dateString: string): Date {
     return new Date(parseInt(year, 10), month, parseInt(day, 10));
 }
 
-// Example usage
-const dateStr = "7th September 2024";
-const dateObj = parseDateString(dateStr);
-console.log(dateObj); // Outputs: Sat Sep 07 2024 00:00:00 GMT+0000 (Coordinated Universal Time)
-
 
