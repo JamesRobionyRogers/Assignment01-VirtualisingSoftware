@@ -1,6 +1,6 @@
 import { ApplicationData } from "../types";
 
-export default async function fetchApplicationData(uuid: string): Promise<ApplicationData> {
+export async function fetchApplicationData(uuid: string): Promise<ApplicationData> {
     return  {
         uuid: uuid,
         img: "https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png",
