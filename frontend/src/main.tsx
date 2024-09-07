@@ -15,10 +15,13 @@ import NotFound from "./components/common/NotFound";
 import ApplicationTracker from './views/ApplicationTracker';
 import Profile from './views/Profile';
 
-import { handleAddApplication } from './actions';    // TODO: Could be added to actions.ts
+import { handleAddApplication, handleUpdateApplication } from './actions';    // TODO: Could be added to actions.ts
 import { allApplicationLoader, applicationLoader } from './loaders';
 
 import './index.css';
+import ApplicationsLayout from './routers/ApplicationsLayout';
+import ApplicationTrackerView from './views/ApplicationTracker';
+import ApplicationDetails from './views/ApplicationDetails';
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -46,20 +49,36 @@ const router = createBrowserRouter([
     element: <DashboardRouter />,
     children: [
       {
-        path: PathConstants.DASHBOARD,
-        element: <ApplicationTracker />,
+        path: PathConstants.APPLICATIONS,
+        element: <ApplicationsLayout />,
         loader: allApplicationLoader,
+        children: [
+          {
+            path: PathConstants.NEW_APPLICATION,
+            element: <ApplicationDetails />,
+            loader: () => Promise.resolve({}),
+            // Adds a new application to the database
+            action: handleAddApplication,
+          },
+          {
+            path: PathConstants.APPLICATION,
+            element: <ApplicationDetails />,
+            // Loads application data of the given uuid
+            loader: applicationLoader,
+            // TODO: Implement the handleUpdateApplication function
+            action: handleUpdateApplication,
+          },
+        ]
       },
-      { 
-        path: "/dashboard/applications/new", 
-        element: <ApplicationTracker />,
-        action: handleAddApplication,
-      },
-      { 
-        path: "/dashboard/applications/:uuid", 
-        element: <ApplicationTracker />,
-        loader: applicationLoader,
-      },
+      // { 
+      //   path: PathConstants.NEW_APPLICATION, 
+      //   element: <ApplicationTracker />,
+      // },
+      // { 
+      //   path: PathConstants.APPLICATION, 
+      //   element: <ApplicationTracker />,
+      //   loader: applicationLoader,
+      // },
 
       {
         path: PathConstants.GENERATE,

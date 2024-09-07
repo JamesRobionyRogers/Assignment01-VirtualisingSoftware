@@ -10,6 +10,7 @@ import DashboardNav from '../components/dashboard/DashboardNav';
 export default function DashboardRouter() {
     const navigation = [
         { name: 'Dashboard', route: PathConstants.DASHBOARD, current: true, icon: <PresentationChartBarIcon className="h-5 w-5" /> },
+        { name: 'Applications', route: PathConstants.APPLICATIONS, current: false, icon: <PresentationChartBarIcon className="h-5 w-5" /> },
         { name: 'Generate Cover Letter', route: PathConstants.GENERATE, current: false, icon: <CubeTransparentIcon className="h-5 w-5" /> },
         { name: 'Archive', route: PathConstants.ARCHIVE, current: false, icon: <FolderOpenIcon className="h-5 w-5" /> },
     ];

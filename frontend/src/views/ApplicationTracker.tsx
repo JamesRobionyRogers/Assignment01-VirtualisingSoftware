@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { useActionData, useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import {useLoaderData, useNavigate } from "react-router-dom";
 import { Card, CardHeader, Input, Typography, Button, CardBody, Chip, CardFooter, Tabs, TabsHeader, Tab, Avatar, IconButton, Tooltip, Drawer, } from "@material-tailwind/react";
-import { MagnifyingGlassIcon, ChevronUpDownIcon, LinkIcon, DocumentTextIcon, } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, ChevronUpDownIcon, LinkIcon, DocumentTextIcon, ArrowPathIcon, } from "@heroicons/react/24/outline";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 
-import Application from "./Application";
 
 import { color as ChipColor } from "@material-tailwind/react/types/components/chip";
 import { ApplicationData, suppressMissingAttributes } from "../types";
+import { formatDate } from "../utils";
 
 
 const TABS = [
@@ -78,17 +78,15 @@ const defaultApplicationData = {
     link: "",
 };
 
-export default function ApplicationTrackerView() {
+export default function ApplicationTracker() {
+    const navigate = useNavigate();
 
     const loaderData = useLoaderData();
-  
-    // Set applicationData to a default value if it is not provided
-    const applicationData = (loaderData) ? loaderData as ApplicationData : defaultApplicationData; 
 
-    const { uuid } = useParams<{ uuid: string }>();
-    const navigate = useNavigate();
-    const location = useLocation();
-    const isNewApplication = location.pathname.includes("/new");
+    // Extract the list of all applications from the loader otherwise set it to an empty array
+    const allApplications: ApplicationData[] = loaderData as ApplicationData[] ?? [];
+
+    console.log("All Applications:", allApplications);
 
     const [filter, setFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
@@ -96,29 +94,14 @@ export default function ApplicationTrackerView() {
     
 
     const pageCount = 10; // Math.ceil(TABLE_ROWS.length / 10);
-
     const [page, setPage] = useState(1);
 
     const handleAddApplication = () => navigate('/dashboard/applications/new');
-    const handleCloseDrawer = () => navigate('/dashboard');
 
-    const actionData: { error: string, success: string } = useActionData() as { error: string, success: string }; // Access data returned from action
+    const handleReloadComponent = () => navigate('/dashboard/applications');
 
     return (
         <>
-
-            <Drawer
-                placement="right"
-                open={!!uuid || isNewApplication}
-                onClose={handleCloseDrawer}
-                overlay={false}
-                size={1200}
-                className="p-4 border border-blue-gray-100 dark:border-gray-700 rounded-xl overflow-scroll"
-                {...suppressMissingAttributes}
-            >
-                <Application application={applicationData} actionData={actionData}/>
-            </Drawer>
-
             <div className="flex flex-col h-full">
                 <Card className="flex flex-col flex-1 shadow-none dark:bg-neutral-950" {...suppressMissingAttributes}>
                     <CardHeader floated={false} shadow={false} className="rounded-none bg-transparent" {...suppressMissingAttributes}>
@@ -132,6 +115,10 @@ export default function ApplicationTrackerView() {
                                 </Typography>
                             </div>
                             <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+                                <Button onClick={handleReloadComponent} className="flex items-center gap-3 dark:bg-white dark:text-black" size="sm" {...suppressMissingAttributes}>
+                                    <ArrowPathIcon strokeWidth={2} className="h-4 w-4" /> Reload
+                                </Button>
+
                                 <Button onClick={handleAddApplication} className="flex items-center gap-3 dark:bg-white dark:text-black" size="sm" {...suppressMissingAttributes}>
                                     <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Job Application
                                 </Button>
@@ -184,20 +171,26 @@ export default function ApplicationTrackerView() {
                             </thead>
                             <tbody>
                                 {
-                                    applicationData.filter(
-                                        ({ name, job, status }) =>
-                                            (filter === "all" || status.toLowerCase() === filter) &&
-                                            (name.toLowerCase().includes(searchTerm) || job.toLowerCase().includes(searchTerm))
-                                    ).map(
-                                        ({ uuid, img, name, job, org, status, date, link }, index) => {
-                                            const isLast = index === applicationData.length - 1;
+                                    allApplications.filter( ({ job_title, company_name, status }) => {
+                                        const isFilterMatch = filter === "all" || status.toLowerCase() === filter;
+                                        const isSearchMatch = company_name.toLowerCase().includes(searchTerm) || job_title.toLowerCase().includes(searchTerm);
+
+                                        return isFilterMatch && isSearchMatch;
+                                    })
+                                    .map(
+                                        ({ id, img, job_title, company_name, status, application_date, application_url }: ApplicationData, index) => {
+                                            const isLast = index === allApplications.length - 1;
                                             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
+                                            const viewApplication = () => navigate(`/dashboard/applications/${id}`);
+
+                                            img = "https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png";
+
                                             return (
-                                                <tr key={index} onClick={() => navigate(`/dashboard/applications/${uuid}`)} className="hover:cursor-pointer">
+                                                <tr key={index} onClick={viewApplication} className="hover:cursor-pointer">
                                                     <td className={classes}>
                                                         <div className="flex items-center gap-3">
-                                                            <Avatar src={img} alt={name} size="sm" {...suppressMissingAttributes} />
+                                                            { img && ( <Avatar src={img} alt={company_name} size="sm" {...suppressMissingAttributes} /> ) }
                                                             <div className="flex flex-col">
                                                                 <Typography
                                                                     variant="small"
@@ -205,7 +198,7 @@ export default function ApplicationTrackerView() {
                                                                     className="font-normal dark:text-white"
                                                                     {...suppressMissingAttributes}
                                                                 >
-                                                                    {name}
+                                                                    {company_name}
                                                                 </Typography>
                                                             </div>
                                                         </div>
@@ -218,16 +211,18 @@ export default function ApplicationTrackerView() {
                                                                 className="font-normal dark:text-white"
                                                                 {...suppressMissingAttributes}
                                                             >
-                                                                {job}
+                                                                {job_title}
                                                             </Typography>
-                                                            <Typography
+
+                                                            {/* TODO: Department such as: Finance, etc...  */}
+                                                            {/* <Typography
                                                                 variant="small"
                                                                 color="blue-gray"
                                                                 className="font-normal opacity-70 dark:text-white"
                                                                 {...suppressMissingAttributes}
                                                             >
-                                                                {org}
-                                                            </Typography>
+                                                                {department}
+                                                            </Typography> */}
                                                         </div>
                                                     </td>
                                                     <td className={classes}>
@@ -247,7 +242,7 @@ export default function ApplicationTrackerView() {
                                                             className="font-normal dark:text-white"
                                                             {...suppressMissingAttributes}
                                                         >
-                                                            {date}
+                                                            {formatDate(application_date)}
                                                         </Typography>
                                                     </td>
                                                     <td className={`${classes} flex gap-2 justify-center`}>
@@ -256,7 +251,7 @@ export default function ApplicationTrackerView() {
                                                                 <DocumentTextIcon className="h-4 w-4 text-blue-400" />
                                                             </IconButton>
                                                         </Tooltip>
-                                                        <a href={link} target="_blank" rel="noopener noreferrer">
+                                                        <a href={application_url} target="_blank" rel="noopener noreferrer">
                                                             <Tooltip content="Application Link">
                                                                 <IconButton variant="text" {...suppressMissingAttributes}>
                                                                     <LinkIcon className="h-4 w-4 dark:text-white" />
