@@ -45,3 +45,12 @@ export interface ApplicationAction {
     icon: React.FC | React.ComponentType<React.SVGProps<SVGSVGElement>>,
     action: () => void,
 }
+
+
+export interface AxiosError {
+    response: {
+        data: {
+            error: string,
+        },
+    },
+}

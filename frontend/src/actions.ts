@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { parseDateString } from "./utils";
+import { AxiosError } from "./types";
 
 export async function handleAddApplication({ request }: { request: Request }): Promise<{ error?: string; success?: string }> {
     const userId = sessionStorage.getItem("user_id");
@@ -57,9 +58,11 @@ export async function handleAddApplication({ request }: { request: Request }): P
 
         return { success: "Application added successfully!" };
     }
-    catch (error: any) {
-        console.error(error.response.data.error);
-        return { error: "Failed to add application." };
+    catch (error) {
+        const errorMessage = (error as AxiosError).response.data.error || "Failed to fetch applications.";
+
+        console.error(errorMessage);
+        return { error: errorMessage };
     }
 
 }
