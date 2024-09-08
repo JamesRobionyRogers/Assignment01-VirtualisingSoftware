@@ -1,0 +1,163 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=2cm, bottom=2cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\usepackage[parfill]{parskip}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{color,soul}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{wrapfig} % For wrapping figures
+\usepackage{hyperref}
+
+\newcommand{\customSubfigure}[3]{%
+    \begin{subfigure}{#2}
+        \centering
+        \includegraphics[width=\linewidth]{#1}
+        \phantomcaption{#3}
+    \end{subfigure}%
+}
+
+% Suppressing \hbox overflow warnings up to 35pt
+\hfuzz=35pt
+
+\pagestyle{fancy}
+
+\title{COSC349 Assignment 1: Virtualisation with Docker}
+\author{James Robiony-Rogers (5793901) \& Corban Surtees (4658948)} 
+
+\begin{document}
+\begin{titlepage}
+    \maketitle
+    \vfill
+    \tableofcontents
+\end{titlepage}
+
+\pagebreak
+
+\section{Introduction}
+
+This report details the design, development, and deployment of a job application tracker using modern cloud-ready development practices. The Job Application Tracker is a web-based application aimed at students and job seekers, allowing them to efficiently manage their job search by recording key information about their applications, such as job roles, companies, statuses, and dates of submission. The project demonstrates the use of virtualization technologies to achieve a portable and distributed software application, operating across three virtual machines (VMs) through Docker and Docker Compose. This setup showcases the power of containerization, ensuring that the application is easily deployable on various host systems.
+
+The technologies utilized in this project include:
+
+\begin{itemize}
+    \item Frontend: React (with TypeScript) for the user interface.
+    \item Backend: Python Flask REST API to handle business logic and interact with the database.
+    \item Database: Supabase, a cloud-based backend platform built on PostgreSQL, used for data storage and interaction.
+\end{itemize}
+
+
+\section{Application Design and Virtual Machines}
+
+\subsection*{System Architecture}
+The Job Application Tracker follows a three-tire architecture:
+
+\begin{enumerate}
+    \item Frontend: A React-based web interface styled with TailwindCSS where users record and view details of job applications they have applied to.
+    \item Backend: A Flask-based REST API that manages business logic and handles HTTP requests from the frontend. It interacts with Supabase for data management.
+    \item Database: Supabase is used for persistent storage of user data, including job applications and profile information.
+\end{enumerate}
+
+\subsection*{VMs Configuration}
+The application leverages virtualization through the use of Docker containers. The frontend, backend, and Supabase database are each encapsulated in their own containers. 
+
+While the frontend and backend run in separate Docker containers, supabase pulls its own Docker containers (for the database and other services) and starts them using its own Docker Compose file.
+
+To package the application, the project uses Docker Compose to orchestrate these containers. We utilise the \texttt{include} command in Docker Compose to integrate Supabase's Docker Compose file with the main one, enabling all containers to start together.
+
+\subsection*{Justifying our Approach}
+Using separate VMs (or containers) for each tier offers several advantages:
+
+Scalability: Each tier can be scaled independently based on demand. For example the frontend container could be scaled horizontally to handle more concurrent users.
+
+Isolation: Keeping the frontend, backend, and database separate ensures that issues or updates in one tier do not affect the others. This separation also improves security, as each service runs in its own isolated environment.
+
+Portability: Docker ensures that the application can run consistently across different environments, from development to production, making it easier to deploy on various platforms or cloud providers.
+
+\section{Automated Build and Deployment Process}
+The project is designed to be easily built and deployed using Docker and Docker Compose
+
+\subsubsection*{Docker Setup}
+The Dockerfile for the frontend is configured to install Node.js and all of the projects dependencies, build the React application and serve it on port 80 using Nginx.
+
+The Dockerfile for the backend installs Python and the necessary packages, then runs the Flask application. 
+
+Supabase pulls its required containers and services (PostgreSQL, authentication, etc.) from the internet. The main Docker Compose file starts both the frontend and backend containers and integrates the Supabase containers into the application stack.
+
+To demonstrate the functionality of the application, a separate Docker container is used to populate the database with test data. This ensures that when the application is started, it already contains sample job applications and users, allowing for immediate testing and demonstration.
+
+\subsubsection*{Build Process}
+The build process is automated and only requires the docker compose build and up commands to be run. This will download the necessary containers, build, and start the application.
+
+For a first-time build, the following components are downloaded: 
+
+\begin{table}[htbp]
+    \newlength{\tableRowSpacing}
+    \setlength{\tableRowSpacing}{3pt}   % 3pt = 0.3em
+
+    \centering
+    \begin{tabularx}{\textwidth}{XXrr}
+    \toprule
+    Container & Dependencies &  Approximate Image Size \\
+    \midrule
+    Frontend & Node.js, Nginx & 50 MB \\
+    \addlinespace[\tableRowSpacing]
+    Backend & Python, Flask & 200 MB \\
+    \addlinespace[\tableRowSpacing]
+    Populate Database &  PostgreSQL & 450 MB \\
+    \addlinespace[\tableRowSpacing]
+    Database & All Supabase services & 4.27 GB \\
+    % \bottomrule
+    \end{tabularx}
+    \caption{Approximate image sizes for each container }
+\end{table}
+
+For subsequent builds, nothing extra is downloaded, as the images are cached locally. This makes the build process faster and more efficient.
+
+\section{Suggested Improvements}
+
+\subsection{Secure Authentication}
+The current implementation uses basic authentication for user management. A key improvement would be to implement more secure authentication mechanisms such as OAuth or JWT. This would enhance the security of the application, making it suitable for production use where sensitive user data like resumes and cover letters are involved.
+
+After implementing secure authentication and testing in development mode, the application can be rebuilt and rerun using the same Docker Compose commands outlined in the project's README file.
+
+\subsection{Supabase Object Storage}
+Adding Supabase Object Storage would allow users to store and manage additional documents, such as resumes, cover letters, or application receipts. This would extend the functionality of the Job Application Tracker, making it a more comprehensive solution for job seekers. 
+
+Once again rebuilding and rerunning the application simply requires running the Docker Compose commands.
+
+
+\section{Attribution}
+This project was developed by James Robiony-Rogers and Corban Surtees for COSC349 at the University of Otago. The project would not have been made possible without various open-source projects and libraries that we have used. These include: 
+
+
+\begin{itemize}
+    \item Frontend: TailwindCSS components \url{https://tailwindui.com/components}
+    \item Frontend: Material Tailwind \url{https://material-tailwind.com/}
+    \item Frontend: Preline UI \url{https://preline.co}
+    \item Backend: Flask \url{https://flask.palletsprojects.com/en/2.0.x/}
+    \item Database: Supabase \url{https://supabase.io/}
+\end{itemize}
+
+The project is available on GitHub at:
+
+\url{https://github.com/JamesRobionyRogers/Assignment01-VirtualisingSoftware/}.
+
+
+\end{document}
