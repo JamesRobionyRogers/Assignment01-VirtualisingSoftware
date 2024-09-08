@@ -14,7 +14,7 @@
 
 This project demonstrates the use of virtualization technologies to build and deploy a portable software application designed for job seekers. Our application, the Job Application Tracker, helps students and job seekers efficiently manage their job search process. It operates across three different virtual machines (VMs), showcasing the power of distributed systems and cloud-ready software development practices.
 
-The Job Application Tracker allows users to record and monitor the companies and roles they've applied to, including key information such as application status, submission dates, additional notes, and a chronological history of each application's progress.
+The Job Application Tracker allows users to record and monitor the companies and roles they've applied to, including key information such as application status, submission dates and additional notes.
 
 
 ## Built With
