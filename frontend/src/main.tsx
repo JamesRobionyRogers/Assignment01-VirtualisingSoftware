@@ -4,22 +4,22 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider } from "@material-tailwind/react";
 
-import PathConstants from './pathConstants';
-
-import LandingRouter from "./routers/LandingRouter";
-import DashboardRouter from "./routers/DashboardRouter";
-
 import { LandingPage, LoginPage, SignupPage, ErrorPage } from './pages';
 import NotFound from "./components/common/NotFound";
 
-import Profile from './views/Profile';
+import LandingRouter from "./routers/LandingRouter";
+import DashboardRouter from "./routers/DashboardRouter";
+import ApplicationsLayout from './routers/ApplicationsLayout';
 
+import Profile from './views/Profile';
+import ApplicationDetails from './views/ApplicationDetails';
+
+import PathConstants from './pathConstants';
 import { handleAddApplication, handleUpdateApplication } from './actions';    // TODO: Could be added to actions.ts
 import { allApplicationLoader, applicationLoader } from './loaders';
 
 import './index.css';
-import ApplicationsLayout from './routers/ApplicationsLayout';
-import ApplicationDetails from './views/ApplicationDetails';
+import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -63,7 +63,6 @@ const router = createBrowserRouter([
             element: <ApplicationDetails />,
             // Loads application data of the given uuid
             loader: applicationLoader,
-            // TODO: Implement the handleUpdateApplication function
             action: handleUpdateApplication,
           },
         ]
