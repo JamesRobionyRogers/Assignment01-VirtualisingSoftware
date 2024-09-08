@@ -110,7 +110,7 @@ export function getCompanyLogoUrl(company: string): string | null{
 
 export function appendHttpsToLink(link: string): string {
     if (!link) return '';
-    if (!link.startsWith('http') || !link.startsWith('https')) {
+    if (!link.startsWith('http') && !link.startsWith('https')) {
         return `https://${link}`;
     }
     return link;
