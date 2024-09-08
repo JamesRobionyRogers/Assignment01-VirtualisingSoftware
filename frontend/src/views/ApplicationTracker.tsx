@@ -30,7 +30,8 @@ export default function ApplicationTracker() {
 
     const [filter, setFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value.toLowerCase());
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => { setSearchTerm(e.target.value.toLowerCase()); setPage(1); }
+    const handleFilter = (value: string) => { setFilter(value); setPage(1); }
 
     const recordsPerPage = 5;
     const [page, setPage] = useState(1);
@@ -75,7 +76,7 @@ export default function ApplicationTracker() {
                             <Tabs value="all" className="w-full md:w-max">
                                 <TabsHeader {...suppressMissingAttributes}>
                                     {FILTER_TABS.map(({ label, value }) => (
-                                        <Tab key={value} value={value} onClick={() => setFilter(value)} {...suppressMissingAttributes}>
+                                        <Tab key={value} value={value} onClick={() =>handleFilter(value)} {...suppressMissingAttributes}>
                                             &nbsp;&nbsp;{label}&nbsp;&nbsp;
                                         </Tab>
                                     ))}
