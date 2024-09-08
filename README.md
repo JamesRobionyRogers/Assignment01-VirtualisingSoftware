@@ -1,93 +1,119 @@
-<!-- PROJECT LOGO --> <br /> <p align="center"> <h1 align="center"> Deploying via Docker </h1> <h6 align="center">August 2024 - James Robiony-Rogers & Corban Surtees</h6> <p align="center"> Using virtualisation to effect portable building and deployment of software applications </p> </p>
+<!-- PROJECT LOGO --> 
+<p align="center"> 
+  <h1 align="center"> Deploying via Docker </h1> 
+  <h6 align="center">August 2024 - James Robiony-Rogers & Corban Surtees</h6> 
+  
+  <p align="center"> 
+    Using virtualisation to effect portable building and deployment of software applications 
+  </p> 
+</p>
 
-* * * * *
+---
 
-Overview
---------
+# Overview
 
 This project demonstrates the use of virtualization technologies to build and deploy a portable software application designed for job seekers. Our application, the Job Application Tracker, helps students and job seekers efficiently manage their job search process. It operates across three different virtual machines (VMs), showcasing the power of distributed systems and cloud-ready software development practices.
 
 The Job Application Tracker allows users to record and monitor the companies and roles they've applied to, including key information such as application status, submission dates, additional notes, and a chronological history of each application's progress.
 
-Built With
-----------
+
+## Built With
 
 -   **Frontend:** [React.js](https://reactjs.org) **&** [Tailwind CSS](https://tailwindcss.com)
 -   **Backend:** [Python Flask REST API](https://flask.palletsprojects.com/en/2.0.x/)
 -   **Database:** [Supabase](https://supabase.io)
 
-File Tree
----------
+## File Tree
 
--   `frontend` - Contains the React frontend project
--   `backend` - Contains the Python Flask backend project
--   `database` - Contains the Supabase database configuration
+-  `.github/workflows` - Contains the GitHub Actions workflow for CI/CD
+-  `frontend` - Contains the React frontend project
+-  `backend` - Contains the Python Flask backend project
+-  `database` - Contains the Supabase database configuration
 
-Running Locally
----------------
+---
 
-To set up and run the project locally, follow these steps:
+## Running the Project Locally
 
-**Build and run the job tracker:** From the root of the repository, run:
+Running the project locally requires Docker to be installed on your machine.
 
-```bash
+1. Clone the Repository using the following command:
+```sh
+git clone https://github.com/JamesRobionyRogers/Assignment01-VirtualisingSoftware.git
+```
+
+2. Change into the project directory:
+```sh
+cd Assignment01-VirtualisingSoftware
+```
+
+3. Build and run the Job Tracker:
+```sh
 docker compose build
 docker compose up -d
 ```
 
-**Access the application:**
-
+4. Access the application via the following URLs:
 -   Job Tracker Application: [`http://localhost:80`](http://localhost:80)
 -   Supabase Studio Dashboard: [`http://localhost:8000`](http://localhost:8000)
 -   Python Flask API: [`http://localhost:5001`](http://localhost:5001)
 
-**Shut down the job tracker:**
 
-```bash
+5. Shut down the Job Tracker:
+```sh
 docker compose down
 ```
 
+---
 
-View Project
-------------
+## View Project
 
-<div align="center"> <img style="width: 100%" src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/rcdywbhax0k9hbipb486.png"> </div>
+<div align="center"> 
+  <img style="width: 100%" src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/rcdywbhax0k9hbipb486.png"> 
+</div>
 
 * * * * *
 
-Container Structure
------------------------
+## Container Structure
 
-### Application Design and Use of VMs
+This projects is build utilising three containers. The containers are as follows:
 
--   **Purpose of VMs:** This project is built using three VMs:
+- **Frontend Tier:** This container hosts the React.js application interface via nginx.
+- **Backend Tier:** This container runs the Python Flask REST API.
+- **Database Tier:** The database tier is a collection of services running in containers that run make up the Supabase database and its services.
 
-    1.  **Frontend VM:** Hosts the React.js application interface.
-    2.  **Backend VM:** Runs the Python Flask REST API.
-    3.  **Database VM:** Manages the Supabase database.
--   **Justification:** Separating the application into different VMs allows for a modular design where each VM handles a distinct aspect of the application. This setup enhances scalability, maintenance, and isolation of services.
+By separating the application into different containers, we can achieve a modular design where each container handles a distinct aspect of the application. This setup enhances scalability, maintenance, and isolation of services.
 
-- The containers are all connected via the backend container. Http requests are sent between the containers to allow them to communicate.
+The containers are all connected via the backend container. Http requests are sent between the containers to allow them to communicate.
 
-### Automated Build Process
+## Docker Compose Configuration
 
--   **Unattended Build:** The project uses Docker Compose to handle the setup of all necessary services automatically. After the initial setup, the application will preload test data for demonstration purposes.
+The project uses Docker Compose to manage the setup of all necessary services. The `docker-compose.yml` file in the root directory defines the services required to run the application. After the initial setup, the application will preload test data for demonstration purposes.
 
--   **Component Download:** The build process will automatically download and configure all required components. For a fresh build, this involves downloading Docker images and setting up containers, with approximate download volumes specified in the project report.
+Through the build process, the application will automatically download and configure all required components. For a fresh build, this involves downloading Docker images and setting up containers, with approximate download volumes specified in the project report.
 
-## Test data
+---
 
-When the application is launched with no data in the database, or on the first launch of the application, test data will be added to each of the tables.
+## Example Data 
 
-There are two users each with their own unique applications already assigned to them.
+The application comes preloaded with example data to demonstrate its functionality. The example data includes two users, each with their own applications. The users are as follows:
 
-1. John Doe
-- Email: john.doe@example.com
-- Password: password123
+<!-- Create table for user data -->
+| Name | Email Address | Password |
+|---------|---------------|----------|
+| John Doe | john.doe@example.com | password123 |
+| Jane Smith | jane.smith@example.com | password123 |
 
-2 Jane Smith
-- Email: jane.smith@example.com
-- Password: password123
+---
+
+## Further Development      
+
+The Job Application Tracker is a versatile application that can be extended in various ways. Below are links to the various tiers README files to get up to speed with development on the project.
+
+- **Frontend README:** [here](frontend/README.md)
+- **Backend README:** [here](backend/README.md)
+- **Database README:** [here](database/README.md)
+
+
 
 
 ## Suggested Improvements
@@ -109,30 +135,3 @@ There are two users each with their own unique applications already assigned to 
    - **Steps to Implement the Change:**
 
      Edit `backend/app/api` contents to use a different authentication method. Restart the application following the instructions below.
-
-### Rebuilding and Rerunning the Application
-
-1. **Rebuilding the Docker Images:**
-   After making changes, developers should rebuild the Docker images to incorporate the updates. This is done by running these commands from the root of the project:
-   ```bash
-   docker compose down
-   docker compose build
-   docker compose up -d
-   ```
-
-
-### Repository Structure
-
--   The repository is organized to facilitate easy navigation and understanding. The Git commit history clearly shows the incremental development of the project.
-
--   Frontend README: [here]
--   Backend README: [here]
--   Database README: [here]
-
-Submission Details
-------------------
-
--   **Repository URL:** [`GitHub`](https://github.com/JamesRobionyRogers/Assignment01-VirtualisingSoftware)
--   **Git Commit ID:** [Commit ID for marking]
--   **Screen Recording URL:** [URL to the screen recording]
--   **Project Report:** [Link to the PDF report]
