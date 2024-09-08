@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Cog6ToothIcon, CubeTransparentIcon, FolderOpenIcon, PowerIcon, PresentationChartBarIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { Bounce, ToastContainer } from 'react-toastify';
 
 import PathConstants from '../pathConstants';
 
@@ -37,6 +38,21 @@ export default function DashboardRouter() {
 
                 </div>
             </main>
+
+            <ToastContainer
+                stacked
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+            />
 
         </div>
     );
