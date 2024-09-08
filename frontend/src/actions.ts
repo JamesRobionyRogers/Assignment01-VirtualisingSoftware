@@ -1,3 +1,10 @@
+/**
+ * This file contains react-router action functions that are used when the user 
+ * submits a form within the application. These functions are called within main.tsx
+ * @see frontend/src/main.tsx
+ * @reference https://reactrouter.com/en/main/route/action
+*/
+
 import axios from "axios";
 import { Bounce, toast } from "react-toastify";
 

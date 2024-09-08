@@ -1,3 +1,10 @@
+/**
+ * This file contains react-router loader functions that are used when a component
+ * is loaded via a route. These functions are called within main.tsx
+ * @see frontend/src/main.tsx
+ * @reference https://reactrouter.com/en/main/route/loader
+*/
+
 import axios from "axios";
 import { json, LoaderFunctionArgs } from "react-router-dom";
 
