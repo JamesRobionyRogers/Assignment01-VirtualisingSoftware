@@ -1,16 +1,12 @@
 import { useState } from "react";
-import {useLoaderData, useNavigate } from "react-router-dom";
-import { Card, CardHeader, Input, Typography, Button, CardBody, Chip, CardFooter, Tabs, TabsHeader, Tab, Avatar, IconButton, Tooltip } from "@material-tailwind/react";
-import { MagnifyingGlassIcon, ChevronUpDownIcon, LinkIcon, DocumentTextIcon, ArrowPathIcon, } from "@heroicons/react/24/outline";
-import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
-
-
+import { useLoaderData, useNavigate } from "react-router-dom";
+import { Card, CardHeader, Input, Typography, Button, CardBody, Chip, CardFooter, Tabs, TabsHeader, Tab, Avatar } from "@material-tailwind/react";
+import { MagnifyingGlassIcon, ChevronUpDownIcon, ArrowPathIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { color as ChipColor } from "@material-tailwind/react/types/components/chip";
 import { ApplicationData, suppressMissingAttributes } from "../types";
-import { formatDate } from "../utils";
+import { formatDate, getCompanyLogoUrl } from "../utils";
 
-
-const TABS = [
+const FILTER_TABS = [
     { label: "All", value: "all" },
     { label: "Applied", value: "applied" },
     { label: "Interview", value: "interview" },
@@ -29,25 +25,27 @@ const STATUS_MAP: { [key: string]: ChipColor } = {
 
 export default function ApplicationTracker() {
     const navigate = useNavigate();
-
     const loaderData = useLoaderData();
-
-    // Extract the list of all applications from the loader otherwise set it to an empty array
     const allApplications: ApplicationData[] = loaderData as ApplicationData[] ?? [];
-
-    console.log("All Applications:", allApplications);
 
     const [filter, setFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
-    const handleSearch = (e: { target: { value: string; }; }) => setSearchTerm(e.target.value.toLowerCase());
-    
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value.toLowerCase());
 
-    const pageCount = 10; // Math.ceil(TABLE_ROWS.length / 10);
+    const recordsPerPage = 5;
     const [page, setPage] = useState(1);
 
-    const handleAddApplication = () => navigate('/dashboard/applications/new');
+    const filteredApplications = allApplications.filter(({ job_title, company_name, status }) => {
+        const isFilterMatch = filter === "all" || status.toLowerCase() === filter;
+        const isSearchMatch = company_name.toLowerCase().includes(searchTerm) || job_title.toLowerCase().includes(searchTerm);
+        return isFilterMatch && isSearchMatch;
+    });
 
-    const handleReloadComponent = () => navigate('/dashboard/applications');
+    const pageCount = Math.ceil(filteredApplications.length / recordsPerPage);
+    const currentApplications = filteredApplications.slice((page - 1) * recordsPerPage, page * recordsPerPage);
+
+    const handleAddApplication = () => navigate('/dashboard/applications/new');
+    const handleReloadComponent = () => navigate('.', { replace: true });
 
     return (
         <>
@@ -76,7 +74,7 @@ export default function ApplicationTracker() {
                         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
                             <Tabs value="all" className="w-full md:w-max">
                                 <TabsHeader {...suppressMissingAttributes}>
-                                    {TABS.map(({ label, value }) => (
+                                    {FILTER_TABS.map(({ label, value }) => (
                                         <Tab key={value} value={value} onClick={() => setFilter(value)} {...suppressMissingAttributes}>
                                             &nbsp;&nbsp;{label}&nbsp;&nbsp;
                                         </Tab>
@@ -120,26 +118,20 @@ export default function ApplicationTracker() {
                             </thead>
                             <tbody>
                                 {
-                                    allApplications.filter( ({ job_title, company_name, status }) => {
-                                        const isFilterMatch = filter === "all" || status.toLowerCase() === filter;
-                                        const isSearchMatch = company_name.toLowerCase().includes(searchTerm) || job_title.toLowerCase().includes(searchTerm);
-
-                                        return isFilterMatch && isSearchMatch;
-                                    })
-                                    .map(
-                                        ({ id, img, job_title, company_name, status, application_date, application_url }: ApplicationData, index) => {
-                                            const isLast = index === allApplications.length - 1;
+                                    currentApplications.map(
+                                        ({ id, img, job_title, company_name, status, application_date }: ApplicationData, index) => {
+                                            const isLast = index === currentApplications.length - 1;
                                             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
                                             const viewApplication = () => navigate(`/dashboard/applications/${id}`);
 
-                                            img = "https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png";
+                                            const imgUrl = img ? img : getCompanyLogoUrl(company_name);
 
                                             return (
                                                 <tr key={index} onClick={viewApplication} className="hover:cursor-pointer">
                                                     <td className={classes}>
-                                                        <div className="flex items-center gap-3">
-                                                            { img && ( <Avatar src={img} alt={company_name} size="sm" {...suppressMissingAttributes} /> ) }
+                                                        <div className="flex items-center gap-4">
+                                                            { imgUrl && ( <Avatar src={imgUrl} alt={company_name} size="sm" {...suppressMissingAttributes} /> ) }
                                                             <div className="flex flex-col">
                                                                 <Typography
                                                                     variant="small"
@@ -162,16 +154,6 @@ export default function ApplicationTracker() {
                                                             >
                                                                 {job_title}
                                                             </Typography>
-
-                                                            {/* TODO: Department such as: Finance, etc...  */}
-                                                            {/* <Typography
-                                                                variant="small"
-                                                                color="blue-gray"
-                                                                className="font-normal opacity-70 dark:text-white"
-                                                                {...suppressMissingAttributes}
-                                                            >
-                                                                {department}
-                                                            </Typography> */}
                                                         </div>
                                                     </td>
                                                     <td className={classes}>
@@ -194,24 +176,15 @@ export default function ApplicationTracker() {
                                                             {formatDate(application_date)}
                                                         </Typography>
                                                     </td>
-                                                    <td className={`${classes} flex gap-2 justify-center`}>
-                                                        <Tooltip content="Cover Letter">
-                                                            <IconButton variant="text" {...suppressMissingAttributes}>
-                                                                <DocumentTextIcon className="h-4 w-4 text-blue-400" />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                        <a href={application_url} target="_blank" rel="noopener noreferrer">
-                                                            <Tooltip content="Application Link">
-                                                                <IconButton variant="text" {...suppressMissingAttributes}>
-                                                                    <LinkIcon className="h-4 w-4 dark:text-white" />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        </a>
-                                                        <Tooltip content="Edit Application">
-                                                            <IconButton variant="text" {...suppressMissingAttributes}>
-                                                                <PencilIcon className="h-4 w-4 dark:text-white" />
-                                                            </IconButton>
-                                                        </Tooltip>
+                                                    <td className={`${classes}`}>
+                                                        <Typography
+                                                            variant="small"
+                                                            color="blue-gray"
+                                                            className="font-bold text-blue-600 decoration-2 hover:underline focus:outline-none focus:underline dark:text-blue-500"
+                                                            {...suppressMissingAttributes}
+                                                        >
+                                                            Edit
+                                                        </Typography>
                                                     </td>
                                                 </tr>
                                             );
@@ -230,10 +203,24 @@ export default function ApplicationTracker() {
                         {
                             pageCount > 1 && (
                                 <div className="flex gap-2">
-                                    <Button onClick={() => setPage(page - 1)} variant="outlined" size="sm" className="dark:text-white dark:border-gray-400" {...suppressMissingAttributes}>
+                                    <Button 
+                                        onClick={() => setPage(page - 1)} 
+                                        variant="outlined" 
+                                        size="sm" 
+                                        className="dark:text-white dark:border-gray-400" 
+                                        disabled={page === 1}
+                                        {...suppressMissingAttributes}
+                                    >
                                         Previous
                                     </Button>
-                                    <Button onClick={() => setPage(page + 1)} variant="outlined" size="sm" className="dark:text-white dark:border-gray-400" {...suppressMissingAttributes}>
+                                    <Button 
+                                        onClick={() => setPage(page + 1)} 
+                                        variant="outlined" 
+                                        size="sm" 
+                                        className="dark:text-white dark:border-gray-400" 
+                                        disabled={page === pageCount}
+                                        {...suppressMissingAttributes}
+                                    >
                                         Next
                                     </Button>
                                 </div>
