@@ -1,3 +1,9 @@
+
+/**
+ * Formats a date string in the format '2024-09-07' to '7th September 2024'.
+ * @param dateString The date string to format
+ * @returns The formatted date string
+ */
 export function formatDate(dateString: string | Date): string {
     const date = new Date(dateString);
     const days = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -21,6 +27,11 @@ export function formatDate(dateString: string | Date): string {
     return `${day}${suffix} ${month} ${year}`;
 }
 
+/**
+ * Parses a date string in the format '7th September 2024' and returns a Date object.
+ * @param dateString The date string to parse
+ * @returns The Date object representing the parsed date
+ */
 export function parseDateString(dateString: string): Date {
     // Define a regular expression to extract the day, month, and year
     const datePattern = /^(\d+)(?:st|nd|rd|th)? (\w+) (\d{4})$/;
@@ -57,4 +68,51 @@ export function parseDateString(dateString: string): Date {
     return new Date(parseInt(year, 10), month, parseInt(day, 10));
 }
 
+
+/**
+ * Extracts the base URL from a given job application URL.
+ * @param jobApplicationUrl The URL of the job application
+ * @returns The base URL (domain) of the job application URL or null if the URL is invalid
+ */
+export function extractBaseUrl(jobApplicationUrl: string): string | null {
+    try {
+        // Create a URL object
+        const url = new URL(jobApplicationUrl);
+        
+        // Extract the hostname (which contains the domain)
+        let baseUrl: string = url.hostname;
+        
+        // Remove the 'www.' prefix if present
+        baseUrl = baseUrl.replace(/^www\./, '');
+        
+        return baseUrl;
+    } catch (error) {
+        console.error('Invalid URL provided:', error);
+        return null;
+    }
+}
+
+/**
+ * Generates a URL to fetch the logo of a given company.
+ * @param company The name of the company
+ * @returns The URL to fetch the company logo or null if the company name is invalid
+ * 
+ * @note This function uses the Clearbit Logo API to fetch the company logo and may not work for all companies.
+ * or all company names. This API may also stop working in the future. Try https://www.logo.dev/dashboard for a free alternative.
+ */
+export function getCompanyLogoUrl(company: string): string | null{
+    if (!company) return null;
+
+    company = company.replace(/\s/g, '').toLowerCase();
+    const companyLogoUrl = `https://logo.clearbit.com/${company}.com`;
+    return companyLogoUrl;
+}
+
+export function appendHttpsToLink(link: string): string {
+    if (!link) return '';
+    if (!link.startsWith('http') || !link.startsWith('https')) {
+        return `https://${link}`;
+    }
+    return link;
+}
 
