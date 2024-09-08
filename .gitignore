@@ -7,8 +7,12 @@ __pycache__
 *.out
 
 # Supabase repository 
-supabase/*
-# !supabase/docker
+supabase
+
+# Latex 
+*.pdfsync
+*.synctex.gz
+
 
 # Misc
 *.pdf
