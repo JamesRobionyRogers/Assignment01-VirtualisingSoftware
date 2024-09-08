@@ -4,11 +4,9 @@ import { json, LoaderFunctionArgs } from "react-router-dom";
 // import { fetchApplicationData } from "./api";
 import { APIConstants } from "./pathConstants";
 import { AxiosError } from "./types";
+import { headers } from "./api";
 
-const headers = {
-    'Authorization': `Basic ${sessionStorage.getItem('basic_auth_token')}`,
-    'Content-Type': 'application/json'
-};
+
 
 export async function applicationLoader({ params }: LoaderFunctionArgs) {
     const { uuid } = params;
