@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { Chip } from "@material-tailwind/react"
@@ -12,24 +12,27 @@ const STATUS_MAP: { [key in ApplicationStatus]: ChipColor } = {
 	Rejected: 'red',
 }
 
+/**
+ * StatusSelector component
+ * @param onStatusSelect - Function to handle status selection
+ */
 interface StatusSelectorProps {
 	onStatusSelect: (status: ApplicationStatus) => void
-	statusSelected: ApplicationStatus | null
+	statusSelected: ApplicationStatus
+	setStatusSelected: (status: ApplicationStatus) => void
 }
 
 
-export default function StatusSelector({ onStatusSelect, statusSelected }: StatusSelectorProps) {
-
-	const [selected, setSelected] = useState<ApplicationStatus>( statusSelected ?? 'Applied' )
+export default function StatusSelector({ onStatusSelect, statusSelected, setStatusSelected }: StatusSelectorProps) {
 
 	const handleStatusSelect = (status: ApplicationStatus) => {
-		setSelected(status)
+		setStatusSelected(status)
 		onStatusSelect(status)
 	}
 
 	return (
 		<div className="mt-auto">
-			<Listbox value={selected} onChange={handleStatusSelect}>
+			<Listbox value={statusSelected} onChange={handleStatusSelect}>
 				<div className="relative">
 
 					{/* Currently selected status */}
@@ -37,8 +40,8 @@ export default function StatusSelector({ onStatusSelect, statusSelected }: Statu
 						<Chip
 							variant="ghost"
 							size="sm"
-							value={selected}
-							color={STATUS_MAP[selected]}
+							value={statusSelected}
+							color={STATUS_MAP[statusSelected]}
 						/>
 						<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
 							<ChevronUpDownIcon
