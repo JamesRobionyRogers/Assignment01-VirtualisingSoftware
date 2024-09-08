@@ -23,7 +23,7 @@ services:
       - "5001:5001"
 
   db-init:
-    build: ./db-init
+    build: ./database/init
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     depends_on:
