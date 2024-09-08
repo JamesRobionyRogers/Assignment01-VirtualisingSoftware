@@ -44,7 +44,7 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
     }
 
     const [showCalendar, setShowCalendar] = useState(false);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date(applicationData.application_date) ?? new Date());
 
     const handleShowDatePicker = () => setShowCalendar(true);
     const handleDateSelect = (date: Date) => {
