@@ -1,6 +1,7 @@
 FROM postgres:15
 
-COPY init-tables.sql /init-tables.sql
+COPY schema.sql /schema.sql
+COPY data.sql /data.sql
 COPY init.sh /init.sh
 
 RUN chmod +x /init.sh

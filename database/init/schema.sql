@@ -1,11 +1,5 @@
-DROP TABLE IF EXISTS job_applications CASCADE;
-DROP TABLE IF EXISTS education CASCADE;
-DROP TABLE IF EXISTS skills CASCADE;
-DROP TABLE IF EXISTS experience CASCADE;
-DROP TABLE IF EXISTS accounts CASCADE;
-
 -- Create accounts table
-CREATE TABLE accounts (
+CREATE TABLE IF NOT EXISTS accounts (
     id uuid PRIMARY KEY,
     first_name VARCHAR(100),
     last_name VARCHAR(100),
@@ -23,7 +17,7 @@ CREATE TABLE accounts (
 );
 
 -- Create experience table
-CREATE TABLE experience (
+CREATE TABLE IF NOT EXISTS experience (
     id SERIAL PRIMARY KEY,
     user_id uuid REFERENCES accounts(id) ON DELETE CASCADE,
     job_title VARCHAR(100),
@@ -37,7 +31,7 @@ CREATE TABLE experience (
 );
 
 -- Create skills table
-CREATE TABLE skills (
+CREATE TABLE IF NOT EXISTS skills (
     id SERIAL PRIMARY KEY,
     user_id uuid REFERENCES accounts(id) ON DELETE CASCADE,
     skill_name VARCHAR(100),
@@ -47,7 +41,7 @@ CREATE TABLE skills (
 );
 
 -- Create education table
-CREATE TABLE education (
+CREATE TABLE IF NOT EXISTS education (
     id SERIAL PRIMARY KEY,
     user_id uuid REFERENCES accounts(id) ON DELETE CASCADE,
     institution_name VARCHAR(100),
@@ -61,7 +55,7 @@ CREATE TABLE education (
 );
 
 -- Create job_applications table
-CREATE TABLE job_applications (
+CREATE TABLE IF NOT EXISTS job_applications (
     id SERIAL PRIMARY KEY,
     user_id uuid REFERENCES accounts(id) ON DELETE CASCADE,
     application_url VARCHAR(250),

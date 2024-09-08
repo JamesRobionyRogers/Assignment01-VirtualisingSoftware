@@ -10,6 +10,7 @@ done
 >&2 echo "Postgres is up - executing initialization"
 
 # Run your SQL commands
-PGPASSWORD=$POSTGRES_PASSWORD psql -h db -U postgres -d postgres -f /init-tables.sql
+PGPASSWORD=$POSTGRES_PASSWORD psql -h db -U postgres -d postgres -f /schema.sql
+PGPASSWORD=$POSTGRES_PASSWORD psql -h db -U postgres -d postgres -f /data.sql
 
 echo "Database initialization completed"
