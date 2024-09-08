@@ -75,27 +75,65 @@ DO $$
 BEGIN
     -- Check if any of the tables have data
     IF NOT EXISTS (SELECT 1 FROM auth.users)
-       AND NOT EXISTS (SELECT 1 FROM accounts)
-       AND NOT EXISTS (SELECT 1 FROM experience)
-       AND NOT EXISTS (SELECT 1 FROM skills)
-       AND NOT EXISTS (SELECT 1 FROM education)
-       AND NOT EXISTS (SELECT 1 FROM job_applications) THEN
+    AND NOT EXISTS (SELECT 1 FROM accounts)
+    AND NOT EXISTS (SELECT 1 FROM experience)
+    AND NOT EXISTS (SELECT 1 FROM skills)
+    AND NOT EXISTS (SELECT 1 FROM education)
+    AND NOT EXISTS (SELECT 1 FROM job_applications) THEN
 
         -- Insert the first user into auth.users if no user exists with the given ID
-        INSERT INTO auth.users (id, email, email_confirmed_at, created_at, updated_at, encrypted_password)
-        VALUES 
-            ('450e5a17-33f1-448a-9532-cbc66e5e7653'::uuid, 
-            'john.doe@example.com', 
-            CURRENT_TIMESTAMP,
-            CURRENT_TIMESTAMP, 
-            CURRENT_TIMESTAMP,
-            '$2a$10$ph5bpEar/roAYI6SfSogy.VtUHVMbJ.uYjZh6QmRJkDLNh8BzKDJG'),
-            ('560e5a17-44f2-448a-9532-cdc66e6e7654'::uuid, 
-            'jane.smith@example.com', 
-            CURRENT_TIMESTAMP,
-            CURRENT_TIMESTAMP, 
-            CURRENT_TIMESTAMP,
-            '$2a$10$ph5bpEar/roAYI6SfSogy.VtUHVMbJ.uYjZh6QmRJkDLNh8BzKDJG');
+        INSERT INTO auth.users (
+    id, 
+    email, 
+    email_confirmed_at, 
+    created_at, 
+    updated_at, 
+    encrypted_password, 
+    aud, 
+    role, 
+    raw_app_meta_data, 
+    instance_id, 
+    confirmation_token, 
+    recovery_token, 
+    email_change_token_new, 
+    email_change, 
+    raw_user_meta_data
+) VALUES 
+(
+    '450e5a17-33f1-448a-9532-cbc66e5e7653'::uuid, 
+    'john.doe@example.com', 
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP, 
+    CURRENT_TIMESTAMP,
+    '$2a$10$WXGlub8225XKnacTF8KpcuSN1/FrvFGLf/ROASh3ftLFLiHoof5HG',
+    'authenticated',
+    'authenticated',
+    '{"provider":"email","providers":["email"]}',
+    '00000000-0000-0000-0000-000000000000',
+    '',
+    '',
+    '',
+    '',
+    '{}'
+),
+(
+    '560e5a17-44f2-448a-9532-cdc66e6e7654'::uuid, 
+    'jane.smith@example.com', 
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP, 
+    CURRENT_TIMESTAMP,
+    '$2a$10$WXGlub8225XKnacTF8KpcuSN1/FrvFGLf/ROASh3ftLFLiHoof5HG',
+    'authenticated',
+    'authenticated',
+    '{"provider":"email","providers":["email"]}',
+    '00000000-0000-0000-0000-000000000000',
+    '',
+    '',
+    '',
+    '',
+    '{}'
+);
+
 
         -- Insert the first user into accounts if no account exists with the given ID
         INSERT INTO accounts (id, first_name, last_name, bio, profile_picture_url, phone, email)
