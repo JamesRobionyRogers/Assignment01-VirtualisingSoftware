@@ -12,6 +12,7 @@ import DashboardRouter from "./routers/DashboardRouter";
 import ApplicationsLayout from './routers/ApplicationsLayout';
 
 import Profile from './views/Profile';
+import DashboardHome from './views/DashboardHome';
 import ApplicationDetails from './views/ApplicationDetails';
 
 import PathConstants from './pathConstants';
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
     path: PathConstants.DASHBOARD,
     element: <DashboardRouter />,
     children: [
+      {
+        index: true,
+        element: <DashboardHome />,
+      },
       {
         path: PathConstants.APPLICATIONS,
         element: <ApplicationsLayout />,
