@@ -4,7 +4,7 @@ import ApplicationTrackerView from '../views/ApplicationTracker';
 
 function ApplicationsLayout() {
     return (
-        <div className="applications-layout">
+        <div id="applications-layout" className="h-full">
             <ApplicationTrackerView />
 
             {/* Used for displaying the Single Application Drawer */}

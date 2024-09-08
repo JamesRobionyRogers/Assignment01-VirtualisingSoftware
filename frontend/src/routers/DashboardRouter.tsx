@@ -32,7 +32,7 @@ export default function DashboardRouter() {
                 <div className="relative rounded-2xl border border-blue-gray-50 bg-white h-full flex flex-col overflow-hidden">
                     <DashboardNav />
 
-                    <div id="outlet-container" className="flex-1 overflow-auto no-scrollbar">
+                    <div id="outlet-container" className="relative flex-1 overflow-auto no-scrollbar">
                         <Outlet context={{ setTitle }} />
                     </div>
 
