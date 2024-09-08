@@ -28,7 +28,7 @@ export interface ApplicationDocuments {
 
 export interface ApplicationData {
     id: string,
-    img: string,
+    img: string | null,
     company_name: string,
     job_title: string,
     description?: string,
