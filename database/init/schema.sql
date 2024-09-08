@@ -68,3 +68,5 @@ CREATE TABLE IF NOT EXISTS job_applications (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+DROP FUNCTION IF EXISTS public.handle_new_user;
