@@ -1,22 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Form, useNavigate, useLoaderData } from 'react-router-dom';
 import { Field, Menu, MenuButton, MenuItem, MenuItems, Textarea } from '@headlessui/react';
-import { PlusIcon, CheckIcon, ChevronDownIcon, ClockIcon, DocumentTextIcon, LinkIcon, CalendarDaysIcon, PaperClipIcon } from '@heroicons/react/20/solid';
+import { PlusIcon, CheckIcon, ChevronDownIcon, ClockIcon, LinkIcon, CalendarDaysIcon, PaperClipIcon } from '@heroicons/react/20/solid';
+import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import { BuildingOffice2Icon, NoSymbolIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { Breadcrumbs, Drawer, Timeline, TimelineBody, TimelineConnector, TimelineHeader, TimelineIcon, TimelineItem } from '@material-tailwind/react';
+import { Avatar, Breadcrumbs, Drawer, Timeline, TimelineBody, TimelineConnector, TimelineHeader, TimelineIcon, TimelineItem } from '@material-tailwind/react';
+import { Bounce, toast } from 'react-toastify';
 
 import StatusSelector from '../components/common/StatusSelector';
 import DateSelector from '../components/common/DateSelector';
 
 import { ActionDataProps, ApplicationAction, ApplicationData, ApplicationStatus, suppressMissingAttributes } from '../types';
 import PathConstants from '../pathConstants';
-import { formatDate } from '../utils';
-
-const ACTIONS: ApplicationAction[] = [
-    { name: 'Add event to timeline', color: 'gray', icon: PlusIcon, action: () => { } },
-    { name: 'Mark as Rejected', color: 'red', icon: NoSymbolIcon, action: () => { } },
-    { name: 'Delete this application', color: 'red', icon: TrashIcon, action: () => { } },
-];
+import { appendHttpsToLink, formatDate, getCompanyLogoUrl } from '../utils';
+import { handleDeleteApplication } from '../api/mutations';
+import WarningModal from '../components/modals/WarningModal';
 
 interface ApplicationDetailsProps {
     actionData?: ActionDataProps,
@@ -29,21 +27,21 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
     // Extracting the first application from the loader data array
     const application: ApplicationData = loaderData[0] !== undefined ? loaderData[0] : {} as ApplicationData;
     const [applicationData] = useState<ApplicationData>(application);
-    // const [applicationData, setApplicationData] = useState<ApplicationData>(application);
 
-    console.log(applicationData);
+    applicationData.img = getCompanyLogoUrl(applicationData.company_name);
 
 
     const handleUploadDocument = () => {
-        alert("Uploading document...");
+        toast.success('Document uploaded successfully ', {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            theme: "light",
+            transition: Bounce,
+        });
     }
-
-    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     setApplicationData({
-    //         ...applicationData,
-    //         [e.target.name]: e.target.value,
-    //     });
-    // };
 
     const [showCalendar, setShowCalendar] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
@@ -54,8 +52,8 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
         setShowCalendar(false);
     };
     
-    const [selectedStatus, setSelectedStatus] = useState<ApplicationStatus | null>(null);
-    const handleStatusSelect = (status: ApplicationStatus) => setSelectedStatus(status);
+    const [selectedStatus, setSelectedStatus] = useState<ApplicationStatus>("Applied");
+    const handleStatusSelect = (status: ApplicationStatus) => setSelectedStatus(status)
     
 
     const [showDrawer, setShowDrawer] = useState(true);
@@ -65,6 +63,32 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
         setTimeout(() => navigate(PathConstants.APPLICATIONS), 200);
     }
 
+    const handleDelete = () => {
+        setWarningModelOpen(true);
+    }
+    
+    const [warningModelOpen, setWarningModelOpen] = useState(false);
+    const [warningModelConfirmed, setWarningModelConfirmed] = useState(false);
+    
+    useEffect(() => {
+        if (warningModelConfirmed) {
+            toast.success('Application deleted successfully ');
+            setShowDrawer(false);
+            handleDeleteApplication(applicationData.id);
+            setTimeout(() => navigate(PathConstants.APPLICATIONS), 200);
+        }
+    } , [warningModelConfirmed, applicationData.id, navigate]);
+
+    const handleComingSoon = () => {
+        toast('🚀 Feature coming soon!');
+    }
+
+    const ACTIONS: ApplicationAction[] = [
+        { name: 'Add event to timeline', color: 'gray', icon: PlusIcon, action: () => handleComingSoon()  },
+        { name: 'Mark as Rejected', color: 'red', icon: NoSymbolIcon, action: () => handleStatusSelect('Rejected') },
+        { name: 'Delete this application', color: 'red', icon: TrashIcon, action: () => handleDelete()},
+    ];
+
     return (
         <Drawer
             placement="right"
@@ -72,7 +96,7 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
             onClose={handleCloseDrawer}
             overlay={false}
             size={1200}
-            className="p-4 border border-blue-gray-100 dark:border-gray-700 rounded-xl overflow-scroll"
+            className="p-4 z-40 border border-blue-gray-100 dark:border-gray-700 rounded-xl overflow-scroll"
             {...suppressMissingAttributes}
         >
 
@@ -82,17 +106,20 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
                     separator={<span className="mx-2">/</span>}
                     {...suppressMissingAttributes}>
                     <Link to={PathConstants.DASHBOARD} className="opacity-60"> Dashboard </Link>
-                    <Link to={PathConstants.DASHBOARD} className="opacity-60"> Application Tracker </Link>
+                    <Link to={PathConstants.APPLICATIONS} className="opacity-60"> Application Tracker </Link>
                     <Link to={PathConstants.NEW_APPLICATION} className="opacity-60"> New Application </Link>
                 </Breadcrumbs>
 
                 {actionData?.error && <p style={{ color: "red" }}>{actionData.error}</p>}
                 {actionData?.success && <p style={{ color: "green" }}>{actionData.success}</p>}
 
+                <input type="hidden" name="id" value={applicationData.id} />
+
                 {/* Heading */}
                 <div className="m-5 mt-0">
                     <div className="lg:flex lg:items-center lg:justify-between">
                         <div className="flex flex-row gap-5 min-w-0 flex-1">
+                            { applicationData.img && ( <Avatar src={applicationData.img} alt={applicationData.company_name} size="sm" className="flex-shrink-0 my-auto border-transparent" {...suppressMissingAttributes} /> ) }
                             <h2 className="w-full text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
                                 <input
                                     name="job"
@@ -113,7 +140,7 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
                                 applicationData.application_url && (
                                     <span className="ml-3 hidden sm:block">
                                         <a
-                                            href={applicationData.application_url}
+                                            href={appendHttpsToLink(applicationData.application_url)}
                                             target="_blank"
                                             className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                         >
@@ -163,14 +190,13 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
 
                         {/* Application Status */}
                         <div className="mt-auto mb-[0.125rem]">
-                            <StatusSelector onStatusSelect={handleStatusSelect} statusSelected={selectedStatus}/>
-                            <input type="hidden" name="status" value={selectedStatus ?? ""} />
+                            <StatusSelector onStatusSelect={handleStatusSelect} statusSelected={selectedStatus} setStatusSelected={setSelectedStatus}/>
+                            <input type="hidden" name="status" value={selectedStatus} />
                         </div>
 
                         {/* Company name */}
                         <div className="max-w-sm space-y-3">
                             <div className="flex gap-2">
-                                {/* <Avatar src={applicationData.img} alt={applicationData.company} size="xs" className="flex-shrink-0 border-transparent" {...suppressMissingAttributes} /> */}
                                 <div className="relative">
                                     <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-4">
                                         <BuildingOffice2Icon className="h-5 w-5 text-gray-400" />
@@ -240,6 +266,7 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
 
                 <hr className="my-2 border-blue-gray-50" />
 
+                {/* Body */}
                 <div className="py-4 px-2 grid grid-cols-4 gap-y-10 md:grid-cols-10 md:gap-x-5">
 
                     {/* Job description & Timeline */}
@@ -256,7 +283,7 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
                             />
                         </Field>
 
-                        <div className="ml-3">
+                        <div onClick={handleComingSoon} className="ml-3">
                             <span className="w-[28px] grid justify-center"><span className="h-4 border-l-2"></span></span>
                             <Timeline className="text-gray-500 text-sm md:text-[16px]">
                                 
@@ -279,7 +306,7 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
                     </section>
 
                     {/* Cover Letter */}
-                    <section className="relative col-span-4 row-span-6 flex flex-col sm:order-4 sm:row-span-4 md:order-none">
+                    <section onClick={handleComingSoon} className="relative col-span-4 row-span-6 flex flex-col sm:order-4 sm:row-span-4 md:order-none">
                         <h3 className="text-lg font-bold text-gray-900">Cover Letter</h3>
                         <div className="flex-grow mt-2 flex justify-center items-center rounded-lg border border-dashed border-gray-900/25 px-6">
                             <div className="text-center">
@@ -315,10 +342,10 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
                     </section>
 
                     {/* Documents */}
-                    <section className="col-span-6 row-span-3 sm:order-3 md:order-none">
+                    <section onClick={handleComingSoon} className="col-span-6 row-span-3 sm:order-3 md:order-none">
                         <div className="mb-2 flex flex-row justify-between">
                             <h3 className="text-lg font-bold text-gray-900">Documents</h3>
-                            <button onClick={handleUploadDocument} className=" inline-flex gap-2 items-center rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            <button onClick={handleUploadDocument} type="button" className=" inline-flex gap-2 items-center rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                                 <PlusIcon className="h-4 w-4" />
                                 <span className="text-sm text-white">Upload Document</span>
                             </button>
@@ -330,7 +357,7 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
                             // Check if documents exist
                             (applicationData.documents) ?
 
-                                <ul role="list" className="divide-y divide-gray-100 rounded-md border border-gray-200">
+                                (<ul role="list" className="divide-y divide-gray-100 rounded-md border border-gray-200">
 
                                     {
                                         applicationData.documents.map((document, index) => (
@@ -350,9 +377,24 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
                                             </li>
                                         ))
                                     }
-                                </ul> : <div>
-
-                                </div>
+                                </ul>)
+                                : 
+                                (<div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-8">
+                                    <div className="text-center flex flex-row gap-4">
+                                        <DocumentTextIcon aria-hidden="true" className="mx-auto h-12 w-12 text-gray-300" />
+                                        <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                                            <label
+                                                htmlFor="file-upload"
+                                                className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                                            >
+                                                <span>Upload</span>
+                                                <input id="file-upload" name="file-upload" type="file" className="sr-only" />
+                                            </label>
+                                            <p className="pl-1">documents here</p>
+                                            {/* <p className="text-xs leading-5 text-gray-600">TXT or PDF. Up to 3 options</p> */}
+                                        </div>
+                                    </div>
+                                </div>)
                         }
 
                     </section>
@@ -379,32 +421,11 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
 
 
                     {/* Right column */}
-                    <div className="col-span-4 flex flex-col gap-5">
-
-
-                        {/* <section>
-                            <h3 className="text-lg font-bold text-gray-900">Documents</h3>
-                            <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                                <div className="text-center">
-                                    <DocumentTextIcon aria-hidden="true" className="mx-auto h-12 w-12 text-gray-300" />
-                                    <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                                        <label
-                                            htmlFor="file-upload"
-                                            className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                                        >
-                                            <span>Generate</span>
-                                            <input id="file-upload" name="file-upload" type="file" className="sr-only" />
-                                        </label>
-                                        <p className="pl-1">a cover letter here</p>
-                                    </div>
-                                    <p className="text-xs leading-5 text-gray-600">TXT or PDF. Up to 3 options</p>
-                                </div>
-                            </div>
-                        </section> */}
-
-                    </div>
+                    <div className="col-span-4 flex flex-col gap-5"> </div>
                 </div>
             </Form>
+
+            <WarningModal open={warningModelOpen} onClose={setWarningModelOpen} onConfirm={setWarningModelConfirmed}/>
         </Drawer>
 
     );
