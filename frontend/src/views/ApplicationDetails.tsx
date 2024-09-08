@@ -52,7 +52,7 @@ export default function ApplicationDetails({ actionData }: ApplicationDetailsPro
         setShowCalendar(false);
     };
     
-    const [selectedStatus, setSelectedStatus] = useState<ApplicationStatus>("Applied");
+    const [selectedStatus, setSelectedStatus] = useState<ApplicationStatus>(application.status as ApplicationStatus ?? "Applied");
     const handleStatusSelect = (status: ApplicationStatus) => setSelectedStatus(status)
     
 
