@@ -127,10 +127,8 @@ class JobApplicationsByUser(Resource):
             return {'error': 'No you\'re not allowed this with that auth key'}, 403
         try:
             response = get_applications_by_user(user_id)
-            if response.data:
-                return jsonify(response.data)
-            else:
-                return {'message': 'No job applications found for this user'}, 404
+            # Returns either a list of applications or an empty list
+            return jsonify(response.data)
         except Exception as e:
             return {'error': str(e)}, 400
 
