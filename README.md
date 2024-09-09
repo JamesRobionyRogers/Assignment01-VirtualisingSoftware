@@ -68,10 +68,10 @@ docker compose down
 ## View Project
 
 <div align="center"> 
-  <img style="width: 100%" src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/rcdywbhax0k9hbipb486.png"> 
+  <img style="width: 100%" src="https://github.com/user-attachments/assets/7aea7190-993b-422e-aadc-511469c496b7"> 
 </div>
 
-* * * * *
+---
 
 ## Container Structure
 
