@@ -112,9 +112,11 @@ BEGIN
         INSERT INTO job_applications (user_id, application_url, job_title, company_name, application_date, status, description, notes)
         VALUES
             ('450e5a17-33f1-448a-9532-cbc66e5e7653', 'https://example.com/job1', 'Lead Developer', 'Facebook', '2024-09-01', 'Applied', 'Senior role leading a team of 10 developers', 'Waiting for initial response'),
-            ('450e5a17-33f1-448a-9532-cbc66e5e7653', 'https://example.com/job2', 'Digital Marketing Director', 'Uber', '2024-08-15', 'Interview Scheduled', 'Overseeing all digital marketing efforts', 'Interview scheduled for next week'),
+            ('450e5a17-33f1-448a-9532-cbc66e5e7653', 'https://example.com/job2', 'Digital Marketing Director', 'Uber', '2024-08-15', 'Interview', 'Overseeing all digital marketing efforts', 'Interview scheduled for next week'),
+            ('450e5a17-33f1-448a-9532-cbc66e5e7653', 'https://example.com/job3', 'Product Manager', 'Amazon', '2024-07-20', 'Offer', 'Leading product development and strategy', 'Reviewing offer details'),
+            ('450e5a17-33f1-448a-9532-cbc66e5e7653', 'https://example.com/job3', 'Software Engineer', 'Spotify', '2024-07-20', 'Rejected', 'Developing new features and maintaining existing codebase', 'Reviewing offer details'),
             -- Job applications for the second user
             ('560e5a17-44f2-448a-9532-cdc66e6e7654', 'https://example.com/job3', 'Senior Marketing Strategist', 'Spotify', '2024-09-10', 'Applied', 'Lead the marketing strategy and execution', 'Awaiting feedback'),
-            ('560e5a17-44f2-448a-9532-cdc66e6e7654', 'https://example.com/job4', 'Content Director', 'Google', '2024-07-20', 'Offer Extended', 'Direct content creation and strategy', 'Reviewing offer details');
+            ('560e5a17-44f2-448a-9532-cdc66e6e7654', 'https://example.com/job4', 'Content Director', 'Google', '2024-07-20', 'Offer', 'Direct content creation and strategy', 'Reviewing offer details');
     END IF;
 END $$;
