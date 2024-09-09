@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS accounts (
     profile_picture_url TEXT,
     phone VARCHAR(20),
     email VARCHAR(128),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     -- Foreign key constraint
     CONSTRAINT fk_auth_user
         FOREIGN KEY (id)
@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS experience (
     start_date DATE NOT NULL,
     end_date DATE,
     description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create skills table
@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS skills (
     user_id uuid REFERENCES accounts(id) ON DELETE CASCADE,
     skill_name VARCHAR(100),
     proficiency_level VARCHAR(50),  -- e.g., Beginner, Intermediate, Expert
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create education table
@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS education (
     start_date DATE,
     end_date DATE,
     description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create job_applications table
@@ -61,12 +61,12 @@ CREATE TABLE IF NOT EXISTS job_applications (
     application_url VARCHAR(250),
     job_title VARCHAR(100),
     company_name VARCHAR(100),
-    application_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    application_date TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(50),
     description TEXT,
     notes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 DROP FUNCTION IF EXISTS public.handle_new_user;
