@@ -130,6 +130,17 @@ For a first-time build, the following components are downloaded:
 
 For subsequent builds, nothing extra is downloaded, as the images are cached locally. This makes the build process faster and more efficient.
 
+\begin{figure}[h]
+    \newlength{\imageSize}
+    \setlength{\imageSize}{0.49\textwidth}        % Size of the images
+
+    \centering
+    \customSubfigure{./imgs/jobtracker-images}{\imageSize}{Docker images for frontend, backend \& populate database }
+    \customSubfigure{./imgs/supabase-images}{\imageSize}{Docker images for all supabase services \vspace{0.4cm}}
+
+    \label{fig:docker-image-sizes}
+\end{figure}
+
 \section{Suggested Improvements}
 
 \subsection{Secure Authentication}
