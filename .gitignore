@@ -12,6 +12,9 @@ supabase
 # Latex 
 *.pdfsync
 *.synctex.gz
+*.fls
+*.aux
+*.fdb_latexmk
 
 
 # Misc

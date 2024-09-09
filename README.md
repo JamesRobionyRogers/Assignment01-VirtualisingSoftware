@@ -10,6 +10,8 @@
 
 ---
 
+[![Frontend Build and Test](https://github.com/JamesRobionyRogers/Assignment01-VirtualisingSoftware/actions/workflows/frontend.yml/badge.svg)](https://github.com/JamesRobionyRogers/Assignment01-VirtualisingSoftware/actions/workflows/frontend.yml)
+
 # Overview
 
 This project demonstrates the use of virtualization technologies to build and deploy a portable software application designed for job seekers. Our application, the Job Application Tracker, helps students and job seekers efficiently manage their job search process. It operates across three different virtual machines (VMs), showcasing the power of distributed systems and cloud-ready software development practices.

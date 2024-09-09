@@ -1,6 +1,6 @@
 # .github/workflows/ci.yml
 
-name: CI - Build and Test
+name: Frontend Build and Test
 
 # This specifies that the workflow will run on any push or pull request to the main branch
 on:
