@@ -52,9 +52,9 @@
 
 \section{Introduction}
 
-This report details the design, development, and deployment of a job application tracker using modern cloud-ready development practices. The Job Application Tracker is a web-based application aimed at students and job seekers, allowing them to efficiently manage their job search by recording key information about their applications, such as job roles, companies, statuses, and dates of submission. The project demonstrates the use of virtualization technologies to achieve a portable and distributed software application, operating across three virtual machines (VMs) through Docker and Docker Compose. This setup showcases the power of containerization, ensuring that the application is easily deployable on various host systems.
+This report details the design, development, and deployment of a job application tracker using modern cloud-ready development practices. The Job Application Tracker is a web-based application aimed at students and job seekers, allowing them to efficiently manage their job search by recording key information about their applications, such as job roles, companies, statuses, and dates of submission. The project demonstrates the use of virtualisation technologies to achieve a portable and distributed software application, operating across three containers through Docker and Docker Compose. This setup showcases the power of containerisation, ensuring that the application is easily deployable on various host systems.
 
-The technologies utilized in this project include:
+The technologies utilised in this project include:
 
 \begin{itemize}
     \item Frontend: React (with TypeScript) for the user interface.
@@ -74,15 +74,15 @@ The Job Application Tracker follows a three-tire architecture:
     \item Database: Supabase is used for persistent storage of user data, including job applications and profile information.
 \end{enumerate}
 
-\subsection*{VMs Configuration}
-The application leverages virtualization through the use of Docker containers. The frontend, backend, and Supabase database are each encapsulated in their own containers. 
+\subsection*{Container Configuration}
+The application leverages virtualisation through the use of Docker containers. The frontend, backend, and Supabase database are each encapsulated in their own containers. 
 
 While the frontend and backend run in separate Docker containers, supabase pulls its own Docker containers (for the database and other services) and starts them using its own Docker Compose file.
 
 To package the application, the project uses Docker Compose to orchestrate these containers. We utilise the \texttt{include} command in Docker Compose to integrate Supabase's Docker Compose file with the main one, enabling all containers to start together.
 
 \subsection*{Justifying our Approach}
-Using separate VMs (or containers) for each tier offers several advantages:
+Using separate containers for each tier offers several advantages:
 
 Scalability: Each tier can be scaled independently based on demand. For example the frontend container could be scaled horizontally to handle more concurrent users.
 
